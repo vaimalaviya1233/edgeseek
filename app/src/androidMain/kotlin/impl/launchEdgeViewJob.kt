@@ -17,6 +17,7 @@ import net.lsafer.edgeseek.app.data.settings.EdgeCorner
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 private val logger = Logger.withTag("net.lsafer.edgeseek.app.impl.launchEdgeViewJob")
@@ -90,7 +91,7 @@ fun CoroutineScope.launchEdgeViewJob(
                 EdgeCorner.TopRight -> Gravity.TOP or Gravity.RIGHT
                 EdgeCorner.Right -> Gravity.RIGHT or Gravity.CENTER_VERTICAL
             }
-            windowParams.alpha = Color.alpha(posData.color) / 255f
+            windowParams.alpha = max(Color.alpha(posData.color) / 255f, 0.5f) // 0.5f = 128/255
 
             view.setCardBackgroundColor(posData.color)
             view.alpha = Color.alpha(posData.color) / 255f
