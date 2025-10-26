@@ -1,5 +1,8 @@
+@file:SuppressLint("ModifierParameter")
+
 package net.lsafer.edgeseek.app.components.lib
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.godaddy.android.colorpicker.ClassicColorPicker
+import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.toColorInt
 import net.lsafer.edgeseek.app.components.icons.VisibilityOffIcon
 import kotlin.math.roundToInt
@@ -52,7 +56,7 @@ fun ColorPreferenceListItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(.9f),
-                        color = Color(localValueInt ?: value),
+                        color = HsvColor.from(Color(localValueInt ?: value)),
                         onColorChanged = {
                             localValueString = it.toColorInt().toHexString()
                         }

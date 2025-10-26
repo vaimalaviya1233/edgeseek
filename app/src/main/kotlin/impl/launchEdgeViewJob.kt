@@ -22,7 +22,7 @@ import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-private val TAG = "net.lsafer.edgeseek.app.impl.launchEdgeViewJob"
+private const val TAG = "net.lsafer.edgeseek.app.impl.launchEdgeViewJob"
 
 @SuppressLint("RtlHardcoded", "ClickableViewAccessibility")
 context(ctx: Context, local: Local, coroutineScope: CoroutineScope)
