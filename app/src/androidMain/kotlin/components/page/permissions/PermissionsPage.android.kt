@@ -15,10 +15,8 @@ import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
-actual fun PermissionsPageContent(
-    local: Local,
-    modifier: Modifier,
-) {
+context(_: Local)
+fun PermissionsPageContent(modifier: Modifier = Modifier) {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())

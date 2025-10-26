@@ -11,8 +11,8 @@ import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.UniRoute
 
 @Composable
+context(local: Local)
 fun PermissionsPage(
-    local: Local,
     route: UniRoute.PermissionsPage,
     modifier: Modifier = Modifier,
 ) {
@@ -25,13 +25,6 @@ fun PermissionsPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        PermissionsPageContent(local, Modifier.padding(innerPadding))
+        // PermissionsPageContent(Modifier.padding(innerPadding)) // fixme
     }
 }
-
-@Suppress("EXPECT_AND_ACTUAL_IN_THE_SAME_MODULE")
-@Composable
-expect fun PermissionsPageContent(
-    local: Local,
-    modifier: Modifier = Modifier,
-)

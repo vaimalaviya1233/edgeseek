@@ -20,12 +20,9 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
-import net.lsafer.edgeseek.app.PK_FLAG_BRIGHTNESS_RESET
 import net.lsafer.edgeseek.app.impl.ImplLocal
-import net.lsafer.sundry.storage.select
 
 // Used @JvmOverloads afraid android **might** try instantiating it
 open class ScreenOffBroadCastReceiver @JvmOverloads constructor(
@@ -38,11 +35,7 @@ open class ScreenOffBroadCastReceiver @JvmOverloads constructor(
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_SCREEN_OFF) {
             globalLocal.ioScope.launch {
-                val brightnessReset = globalLocal.dataStore
-                    .select<Boolean>(PK_FLAG_BRIGHTNESS_RESET)
-                    .firstOrNull()
-
-                if (brightnessReset == false)
+                if (!globalLocal.repo.brightnessReset)
                     return@launch
 
                 try {

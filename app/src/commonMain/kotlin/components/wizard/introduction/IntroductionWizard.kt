@@ -25,17 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.*
-import net.lsafer.edgeseek.app.components.page.permissions.PermissionsPageContent
+import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.UniNavController
+import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPageContent
 import net.lsafer.edgeseek.app.l10n.LocalStrings
 import net.lsafer.edgeseek.app.l10n.strings
-import net.lsafer.sundry.storage.edit
-import org.cufy.json.set
 
 @Composable
+context(local: Local, navCtrl: UniNavController)
 fun IntroductionWizard(
-    local: Local,
     route: UniRoute.IntroductionWizard,
     modifier: Modifier = Modifier,
 ) {
@@ -45,14 +44,14 @@ fun IntroductionWizard(
     val steps = UniRoute.IntroductionWizard.Step.entries
 
     val onStepCancel: () -> Unit = {
-        local.navController.back()
+        navCtrl.back()
     }
 
     val onStepConfirm: () -> Unit = {
         val i = route.step.ordinal + 1
 
         if (i <= steps.size)
-            local.navController.push(route.copy(step = steps[i]))
+            navCtrl.push(route.copy(step = steps[i]))
     }
 
     val onPermissionsStepConfirm: () -> Unit = {
@@ -66,22 +65,23 @@ fun IntroductionWizard(
                 )
             }
         } else {
-            local.dataStore.edit { it[PK_FLAG_ACTIVATED] = true }
-            coroutineScope.launch { local.eventbus.emit(UniEvent.StartService) }
+            local.repo.activated = true
+            coroutineScope.launch {
+                local.eventBus.startService.send(Unit)
+            }
             onStepConfirm()
         }
     }
 
     val onComplete: () -> Unit = {
-        local.dataStore.edit { it[PK_WIZ_INTRO] = true }
-        while (local.navController.back());
-        local.navController.push(UniRoute.HomePage)
+        local.repo.introduced = true
+        while (navCtrl.back());
+        navCtrl.push(UniRoute.HomePage)
     }
 
     when (route.step) {
         UniRoute.IntroductionWizard.Step.Welcome -> {
             IntroductionWizardWrapper(
-                local = local,
                 onConfirm = onStepConfirm,
                 onCancel = onStepCancel,
                 modifier = modifier,
@@ -94,25 +94,24 @@ fun IntroductionWizard(
 
         UniRoute.IntroductionWizard.Step.Permissions ->
             IntroductionWizardWrapper(
-                local = local,
                 onConfirm = onPermissionsStepConfirm,
                 onCancel = onStepCancel,
                 modifier = modifier,
-                content = { PermissionsPageContent(local) }
+                content = {
+//                    PermissionsPageContent() // fixme
+                }
             )
 
         UniRoute.IntroductionWizard.Step.Presets ->
             IntroductionWizardWrapper(
-                local = local,
                 onConfirm = onStepConfirm,
                 onCancel = onStepCancel,
                 modifier = modifier,
-                content = { PresetsPageContent(local) }
+                content = { PresetsPageContent() }
             )
 
         UniRoute.IntroductionWizard.Step.Done -> {
             IntroductionWizardWrapper(
-                local = local,
                 onConfirm = onComplete,
                 onCancel = onStepCancel,
                 modifier = modifier,
@@ -126,8 +125,8 @@ fun IntroductionWizard(
 }
 
 @Composable
+context(local: Local)
 fun IntroductionWizardWrapper(
-    local: Local,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,

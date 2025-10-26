@@ -18,25 +18,17 @@ package net.lsafer.edgeseek.app.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
-import net.lsafer.edgeseek.app.PK_FLAG_AUTO_BOOT
-import net.lsafer.edgeseek.app.UniEvent
-import net.lsafer.sundry.storage.select
 
 open class BootCompleteBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             globalLocal.ioScope.launch {
-                val autoBoot = globalLocal.dataStore
-                    .select<Boolean>(PK_FLAG_AUTO_BOOT)
-                    .firstOrNull()
-
-                if (autoBoot == false)
+                if (!globalLocal.repo.autoBoot)
                     return@launch
 
-                globalLocal.eventbus.emit(UniEvent.StartService)
+                globalLocal.eventBus.startService.send(Unit)
             }
         }
     }

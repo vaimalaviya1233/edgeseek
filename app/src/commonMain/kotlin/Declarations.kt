@@ -1,5 +1,6 @@
 package net.lsafer.edgeseek.app
 
+import net.lsafer.compose.simplenav.SimpleNavController
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 
 /* ============= ------------------ ============= */
@@ -35,5 +36,7 @@ sealed interface UniRoute {
         }
     }
 }
+
+typealias UniNavController = SimpleNavController<UniRoute>
 
 /* ============= ------------------ ============= */

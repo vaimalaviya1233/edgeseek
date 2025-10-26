@@ -32,23 +32,20 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
-import net.lsafer.edgeseek.app.components.common.editEdgeSideData
 import net.lsafer.edgeseek.app.components.lib.MobileModel
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import net.lsafer.edgeseek.app.l10n.strings
-import net.lsafer.sundry.storage.select
 
 @Composable
+context(local: Local, navCtrl: UniNavController)
 fun EdgeListPage(
-    local: Local,
     route: UniRoute.EdgeListPage,
     modifier: Modifier = Modifier,
 ) {
@@ -61,15 +58,13 @@ fun EdgeListPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        EdgeListPageContent(local, Modifier.padding(innerPadding))
+        EdgeListPageContent(Modifier.padding(innerPadding))
     }
 }
 
 @Composable
-fun EdgeListPageContent(
-    local: Local,
-    modifier: Modifier = Modifier,
-) {
+context(local: Local, navCtrl: UniNavController)
+fun EdgeListPageContent(modifier: Modifier = Modifier) {
     Column(modifier) {
         Spacer(Modifier.height(50.dp))
 
@@ -95,18 +90,15 @@ fun EdgeListPageContent(
                 MobileModel(Modifier.fillMaxSize())
 
                 for (side in EdgeSide.entries) {
-                    val sideData by produceState(EdgeSideData(side)) {
-                        local.dataStore
-                            .select<EdgeSideData>(side.key)
-                            .filterNotNull()
-                            .distinctUntilChanged()
-                            .collect { value = it }
+                    val sideData by derivedStateOf {
+                        local.repo.edgeSideList.find { it.side == side }
+                            ?: EdgeSideData(side)
                     }
 
-                    EdgeSideItem(local, sideData)
+                    EdgeSideItem(sideData)
 
                     for (pos in EdgePos.entries.filter { it.side == side })
-                        EdgeItem(local, pos, sideData)
+                        EdgeItem(pos, sideData)
                 }
             }
         }
@@ -114,13 +106,13 @@ fun EdgeListPageContent(
 }
 
 @Composable
+context(local: Local)
 private fun BoxScope.EdgeSideItem(
-    local: Local,
     sideData: EdgeSideData,
     modifier: Modifier = Modifier,
 ) {
     fun edit(block: (EdgeSideData) -> EdgeSideData) {
-        local.editEdgeSideData(sideData.side, block)
+        local.repo.edgeSideList += block(sideData)
     }
 
     val alignModifier = when (sideData.side) {
@@ -145,8 +137,8 @@ private fun BoxScope.EdgeSideItem(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
+context(local: Local, navCtrl: UniNavController)
 private fun BoxScope.EdgeItem(
-    local: Local,
     pos: EdgePos,
     sideData: EdgeSideData,
     modifier: Modifier = Modifier,
@@ -158,16 +150,13 @@ private fun BoxScope.EdgeItem(
 
     val handleOnClick: () -> Unit = {
         coroutineScope.launch {
-            local.navController.push(UniRoute.EdgeEditPage(pos))
+            navCtrl.push(UniRoute.EdgeEditPage(pos))
         }
     }
 
-    val data by produceState(EdgePosData(pos)) {
-        local.dataStore
-            .select<EdgePosData>(pos.key)
-            .filterNotNull()
-            .distinctUntilChanged()
-            .collect { value = it }
+    val data by derivedStateOf {
+        local.repo.edgePosList.find { it.pos == pos }
+            ?: EdgePosData(pos)
     }
 
     val thickness = 24.dp

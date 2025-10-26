@@ -17,7 +17,9 @@ package net.lsafer.edgeseek.app.components.window.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import net.lsafer.compose.simplenav.SimpleNavHost
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.page.about.AboutPage
 import net.lsafer.edgeseek.app.components.page.edge_edit.EdgeEditPage
@@ -27,35 +29,34 @@ import net.lsafer.edgeseek.app.components.page.log.LogPage
 import net.lsafer.edgeseek.app.components.page.permissions.PermissionsPage
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPage
 import net.lsafer.edgeseek.app.components.wizard.introduction.IntroductionWizard
-import net.lsafer.sundry.compose.simplenav.current
 
 @Composable
-fun MainWindow(local: Local, modifier: Modifier = Modifier) {
-    when (val route = local.navController.current) {
-        is UniRoute.HomePage ->
-            HomePage(local, route, modifier)
-
-        is UniRoute.EdgeListPage ->
-            EdgeListPage(local, route, modifier)
-
-        is UniRoute.EdgeEditPage ->
-            EdgeEditPage(local, route, modifier)
-
-        is UniRoute.PermissionsPage ->
-            PermissionsPage(local, route, modifier)
-
-        is UniRoute.PresetsPage ->
-            PresetsPage(local, route, modifier)
-
-        is UniRoute.AboutPage ->
-            AboutPage(local, route, modifier)
-
-        is UniRoute.LogPage ->
-            LogPage(local, route, modifier)
-
-        is UniRoute.IntroductionWizard ->
-            IntroductionWizard(local, route, modifier)
-
-        else -> {}
+context(local: Local, navCtrl: UniNavController)
+fun MainWindow(modifier: Modifier = Modifier) {
+    SimpleNavHost(navCtrl) {
+        entry<UniRoute.HomePage> { route ->
+            HomePage(route, modifier)
+        }
+        entry<UniRoute.EdgeListPage> { route ->
+            EdgeListPage(route, modifier)
+        }
+        entry<UniRoute.EdgeEditPage> { route ->
+            EdgeEditPage(route, modifier)
+        }
+        entry<UniRoute.PermissionsPage> { route ->
+            PermissionsPage(route, modifier)
+        }
+        entry<UniRoute.PresetsPage> { route ->
+            PresetsPage(route, modifier)
+        }
+        entry<UniRoute.AboutPage> { route ->
+            AboutPage(route, modifier)
+        }
+        entry<UniRoute.LogPage> { route ->
+            LogPage(route, modifier)
+        }
+        entry<UniRoute.IntroductionWizard> { route ->
+            IntroductionWizard(route, modifier)
+        }
     }
 }

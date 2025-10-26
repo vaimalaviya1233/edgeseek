@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
@@ -34,8 +35,8 @@ import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
+context(local: Local, navCtrl: UniNavController)
 fun HomePage(
-    local: Local,
     route: UniRoute.HomePage,
     modifier: Modifier = Modifier,
 ) {
@@ -48,15 +49,13 @@ fun HomePage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        MainPageContent(local, Modifier.padding(innerPadding))
+        MainPageContent(Modifier.padding(innerPadding))
     }
 }
 
 @Composable
-fun MainPageContent(
-    local: Local,
-    modifier: Modifier = Modifier,
-) {
+context(local: Local, navCtrl: UniNavController)
+fun MainPageContent(modifier: Modifier = Modifier) {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
@@ -65,37 +64,37 @@ fun MainPageContent(
         ListHeader(title = strings.branding.app_name)
 
         ListSectionTitle(title = strings.label.application)
-        HomePage_ListItem_activation(local)
-        HomePage_ListItem_ui_colors(local)
+        HomePage_ListItem_activation()
+        HomePage_ListItem_ui_colors()
 
         ListDivider()
         ListSectionTitle(title = strings.label.job)
         ListItem(
             modifier = Modifier
-                .clickable { local.navController.push(UniRoute.EdgeListPage) },
+                .clickable { navCtrl.push(UniRoute.EdgeListPage) },
             headlineContent = { Text(strings.stmt.page_edge_list_headline) },
             supportingContent = { Text(strings.stmt.page_edge_list_supporting) },
         )
-        HomePage_ListItem_auto_boot(local)
-        HomePage_ListItem_brightness_reset(local)
+        HomePage_ListItem_auto_boot()
+        HomePage_ListItem_brightness_reset()
 
         ListDivider()
         ListSectionTitle(title = strings.label.misc)
         ListItem(
             modifier = Modifier
-                .clickable { local.navController.push(UniRoute.PermissionsPage) },
+                .clickable { navCtrl.push(UniRoute.PermissionsPage) },
             headlineContent = { Text(strings.stmt.page_permissions_headline) },
             supportingContent = { Text(strings.stmt.page_permissions_supporting) },
         )
         ListItem(
             modifier = Modifier
-                .clickable { local.navController.push(UniRoute.PresetsPage) },
+                .clickable { navCtrl.push(UniRoute.PresetsPage) },
             headlineContent = { Text(strings.stmt.page_presets_headline) },
             supportingContent = { Text(strings.stmt.page_presets_supporting) },
         )
         ListItem(
             modifier = Modifier
-                .clickable { local.navController.push(UniRoute.AboutPage) },
+                .clickable { navCtrl.push(UniRoute.AboutPage) },
             headlineContent = { Text(strings.stmt.page_about_headline) },
             supportingContent = { Text(strings.stmt.page_about_supporting) },
         )

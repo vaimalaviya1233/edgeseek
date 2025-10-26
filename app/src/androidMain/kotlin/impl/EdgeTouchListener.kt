@@ -31,8 +31,6 @@ class EdgeTouchListener(
 
     private val xSeekSensitivityFactor = 155f * dpi
     private val xSwipeThresholdDistant = 10f * dpi
-//    private val xSeekSensitivityFactor = 80_000f
-//    private val xSwipeThresholdDistant = 5_000f
 
     private val xSwipeEnabled =
         onSwipeUp != null ||
@@ -85,22 +83,22 @@ class EdgeTouchListener(
         return true
     }
 
-    override fun onDoubleTap(e: MotionEvent): Boolean {
+    override fun onDoubleTap(e: MotionEvent): Boolean = context(implLocal) {
         if (onDoubleClick != null) {
             mIsDone = true
             doFeedbackVibration()
-            onDoubleClick.execute(implLocal)
+            onDoubleClick.execute()
             return true
         }
 
         return false
     }
 
-    override fun onLongPress(e: MotionEvent) {
+    override fun onLongPress(e: MotionEvent) = context(implLocal) {
         if (onLongClick != null) {
             mIsDone = true
             doFeedbackVibration()
-            onLongClick.execute(implLocal)
+            onLongClick.execute()
         }
     }
 
@@ -117,7 +115,7 @@ class EdgeTouchListener(
         e2: MotionEvent,
         distanceX: Float,
         distanceY: Float,
-    ): Boolean {
+    ): Boolean = context(implLocal) {
         e1 ?: return false
         onSeekImpl ?: return false
         if (mIsDone) return false
@@ -140,14 +138,14 @@ class EdgeTouchListener(
         }
 
         if (mCurrentSeekOrigin == null) {
-            mCurrentSeekOrigin = onSeekImpl.fetchValue(implLocal)
+            mCurrentSeekOrigin = onSeekImpl.fetchValue()
         }
 
         if (mCurrentSeekRange == null) {
             mCurrentSeekRange = if (edgePosData.seekSteps)
-                onSeekImpl.fetchStepRange(implLocal, deltaXOrY.toInt())
+                onSeekImpl.fetchStepRange(deltaXOrY.toInt())
             else
-                onSeekImpl.fetchRange(implLocal)
+                onSeekImpl.fetchRange()
         }
 
         val factor = xSeekSensitivityFactor / (mCurrentSeekRange!!.last - mCurrentSeekRange!!.first)
@@ -155,7 +153,7 @@ class EdgeTouchListener(
         val newValue = mCurrentSeekOrigin!! + ((deltaXOrY * accBoost) / factor * edgePosData.sensitivity).toInt()
         val newValueCoerced = newValue.coerceIn(mCurrentSeekRange!!)
 
-        val value = onSeekImpl.updateValue(implLocal, newValueCoerced, edgePosData.feedbackSystemPanel)
+        val value = onSeekImpl.updateValue(newValueCoerced, edgePosData.feedbackSystemPanel)
 
         if (edgePosData.feedbackToast) {
             implLocal.toast.update("$value")
@@ -169,7 +167,7 @@ class EdgeTouchListener(
         e2: MotionEvent,
         velocityX: Float,
         velocityY: Float,
-    ): Boolean {
+    ): Boolean = context(implLocal) {
         val isVLeaning = abs(velocityX) < abs(velocityY)
         val isVFling = abs(velocityY) > xSwipeThresholdDistant
         val isHFling = abs(velocityX) > xSwipeThresholdDistant
@@ -182,25 +180,25 @@ class EdgeTouchListener(
         if (!isSkipUp && (isVLeaning || isSkipLeft && isSkipRight)) {
             mIsDone = true
             doFeedbackVibration()
-            onSwipeUp!!.execute(implLocal)
+            onSwipeUp.execute()
             return true
         }
         if (!isSkipDown && (isVLeaning || isSkipLeft && isSkipRight)) {
             mIsDone = true
             doFeedbackVibration()
-            onSwipeDown!!.execute(implLocal)
+            onSwipeDown.execute()
             return true
         }
         if (!isSkipLeft /* && (!isVerticalLeaning || isSkipUp && isSkipDown) */) {
             mIsDone = true
             doFeedbackVibration()
-            onSwipeLeft!!.execute(implLocal)
+            onSwipeLeft.execute()
             return true
         }
         if (!isSkipRight /* && (!isVerticalLeaning || isSkipUp && isSkipDown) */) {
             mIsDone = true
             doFeedbackVibration()
-            onSwipeRight!!.execute(implLocal)
+            onSwipeRight.execute()
             return true
         }
 
@@ -224,9 +222,9 @@ class EdgeTouchListener(
         }
     }
 
-    private fun doFeedbackToast() {
+    private fun doFeedbackToast() = context(implLocal) {
         if (onSeekImpl != null && edgePosData.feedbackToast) {
-            val value = onSeekImpl.fetchValue(implLocal)
+            val value = onSeekImpl.fetchValue()
             implLocal.toast.update("$value")
         }
     }

@@ -23,8 +23,8 @@ import kotlin.math.roundToInt
 private val logger = Logger.withTag("net.lsafer.edgeseek.app.impl.launchEdgeViewJob")
 
 @SuppressLint("RtlHardcoded", "ClickableViewAccessibility")
-fun CoroutineScope.launchEdgeViewJob(
-    implLocal: ImplLocal,
+context(coroutineScope: CoroutineScope, implLocal: ImplLocal)
+fun launchEdgeViewJob(
     windowManager: WindowManager,
     displayRotation: Int,
     displayHeight: Int,
@@ -116,13 +116,13 @@ fun CoroutineScope.launchEdgeViewJob(
             runCatching { windowManager.addView(view, windowParams) }
                 .onFailure { e -> logger.e("failed adding view to window", e) }
         }
-        .launchIn(scope = this + Dispatchers.Main)
+        .launchIn(scope = coroutineScope + Dispatchers.Main)
 
     job.invokeOnCompletion { e ->
         if (e !is CancellationException)
             logger.e("failure while executing job", e)
 
-        launch(Dispatchers.Main + NonCancellable) {
+        coroutineScope.launch(Dispatchers.Main + NonCancellable) {
             runCatching { windowManager.removeView(view) }
         }
     }

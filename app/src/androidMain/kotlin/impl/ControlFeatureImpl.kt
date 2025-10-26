@@ -38,22 +38,32 @@ sealed class ControlFeatureImpl {
         }
     }
 
-    abstract fun fetchRange(implLocal: ImplLocal): IntRange
-    open fun fetchStepRange(implLocal: ImplLocal, sign: Int) = fetchRange(implLocal)
-    abstract fun fetchValue(implLocal: ImplLocal): Int
-    abstract fun updateValue(implLocal: ImplLocal, newValue: Int, showSystemPanel: Boolean): Int
+    context(implLocal: ImplLocal)
+    abstract fun fetchRange(): IntRange
+
+    context(implLocal: ImplLocal)
+    open fun fetchStepRange(sign: Int) = fetchRange()
+
+    context(implLocal: ImplLocal)
+    abstract fun fetchValue(): Int
+
+    context(implLocal: ImplLocal)
+    abstract fun updateValue(newValue: Int, showSystemPanel: Boolean): Int
 
     data object Brightness : ControlFeatureImpl() {
-        override fun fetchRange(implLocal: ImplLocal) = 0..255
+        context(implLocal: ImplLocal)
+        override fun fetchRange() = 0..255
 
-        override fun fetchValue(implLocal: ImplLocal): Int {
+        context(implLocal: ImplLocal)
+        override fun fetchValue(): Int {
             return Settings.System.getInt(
                 implLocal.context.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS,
             )
         }
 
-        override fun updateValue(implLocal: ImplLocal, newValue: Int, showSystemPanel: Boolean): Int {
+        context(implLocal: ImplLocal)
+        override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
             val newSystemValue = newValue.coerceIn(0..255)
 
             try {
@@ -71,16 +81,18 @@ sealed class ControlFeatureImpl {
                 return newSystemValue
             } catch (e: Exception) {
                 logger.e("Couldn't update brightness level", e)
-                return fetchValue(implLocal)
+                return fetchValue()
             }
         }
     }
 
     data object BrightnessWithDimmer : ControlFeatureImpl() {
-        override fun fetchRange(implLocal: ImplLocal) = -255..255
+        context(implLocal: ImplLocal)
+        override fun fetchRange() = -255..255
 
-        override fun fetchStepRange(implLocal: ImplLocal, sign: Int): IntRange {
-            val value = fetchValue(implLocal)
+        context(implLocal: ImplLocal)
+        override fun fetchStepRange(sign: Int): IntRange {
+            val value = fetchValue()
             return when {
                 value in 1..255 -> 0..255
                 value in -255..-1 -> -255..0
@@ -90,7 +102,8 @@ sealed class ControlFeatureImpl {
             }
         }
 
-        override fun fetchValue(implLocal: ImplLocal): Int {
+        context(implLocal: ImplLocal)
+        override fun fetchValue(): Int {
             val currentSystemValue = Settings.System.getInt(
                 implLocal.context.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS,
@@ -99,7 +112,8 @@ sealed class ControlFeatureImpl {
             return currentSystemValue - currentDimmerValue
         }
 
-        override fun updateValue(implLocal: ImplLocal, newValue: Int, showSystemPanel: Boolean): Int {
+        context(implLocal: ImplLocal)
+        override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
             val newSystemValue = newValue.coerceIn(0..255)
             val newDimmerValue = -newValue.coerceIn(-255..0)
 
@@ -118,7 +132,7 @@ sealed class ControlFeatureImpl {
                 return newSystemValue - newDimmerValue
             } catch (e: Exception) {
                 logger.e("Couldn't update brightness (with dimmer) level", e)
-                return fetchValue(implLocal)
+                return fetchValue()
             }
         }
     }
@@ -129,18 +143,21 @@ sealed class ControlFeatureImpl {
         data object Ring : Audio(AudioManager.STREAM_RING)
         data object System : Audio(AudioManager.STREAM_SYSTEM)
 
-        override fun fetchRange(implLocal: ImplLocal): IntRange {
+        context(implLocal: ImplLocal)
+        override fun fetchRange(): IntRange {
             val manager = implLocal.context.getSystemService<AudioManager>()!!
             val maximumValue = manager.getStreamMaxVolume(streamType)
             return 0..maximumValue
         }
 
-        override fun fetchValue(implLocal: ImplLocal): Int {
+        context(implLocal: ImplLocal)
+        override fun fetchValue(): Int {
             val manager = implLocal.context.getSystemService<AudioManager>()!!
             return manager.getStreamVolume(streamType)
         }
 
-        override fun updateValue(implLocal: ImplLocal, newValue: Int, showSystemPanel: Boolean): Int {
+        context(implLocal: ImplLocal)
+        override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
             val manager = implLocal.context.getSystemService(AudioManager::class.java)
             val maximumValue = manager.getStreamMaxVolume(streamType)
             val newSystemValue = newValue.coerceIn(0..maximumValue)
@@ -157,7 +174,7 @@ sealed class ControlFeatureImpl {
                 return newSystemValue
             } catch (e: Exception) {
                 logger.e("Couldn't update stream volume of type: $streamType", e)
-                return fetchValue(implLocal)
+                return fetchValue()
             }
         }
     }

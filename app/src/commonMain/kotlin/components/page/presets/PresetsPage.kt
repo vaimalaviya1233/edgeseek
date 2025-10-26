@@ -29,15 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.*
-import net.lsafer.edgeseek.app.components.common.clearAndSetEdgeDataList
-import net.lsafer.edgeseek.app.components.common.editEachEdgeData
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
+context(local: Local)
 fun PresetsPage(
-    local: Local,
     route: UniRoute.PresetsPage,
     modifier: Modifier = Modifier,
 ) {
@@ -50,15 +48,13 @@ fun PresetsPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        PresetsPageContent(local, Modifier.padding(innerPadding))
+        PresetsPageContent(Modifier.padding(innerPadding))
     }
 }
 
 @Composable
-fun PresetsPageContent(
-    local: Local,
-    modifier: Modifier = Modifier,
-) {
+context(local: Local)
+fun PresetsPageContent(modifier: Modifier = Modifier) {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
@@ -70,60 +66,70 @@ fun PresetsPageContent(
         )
         ListSectionTitle(title = strings.label.presets)
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_STANDARD, PRESET_SIDE_STANDARD) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_STANDARD
+                local.repo.edgeSideList = PRESET_SIDE_STANDARD
+            },
             headlineContent = { Text(strings.stmt.preset_standard_headline) },
             supportingContent = { Text(strings.stmt.preset_standard_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_STANDARD, PRESET_SIDE_CENTERED) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_STANDARD
+                local.repo.edgeSideList = PRESET_SIDE_CENTERED
+            },
             headlineContent = { Text(strings.stmt.preset_standard_c_headline) },
             supportingContent = { Text(strings.stmt.preset_standard_c_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_BRIGHTNESS_ONLY, PRESET_SIDE_STANDARD) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_BRIGHTNESS_ONLY
+                local.repo.edgeSideList = PRESET_SIDE_STANDARD
+            },
             headlineContent = { Text(strings.stmt.preset_brightness_headline) },
             supportingContent = { Text(strings.stmt.preset_brightness_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_BRIGHTNESS_ONLY, PRESET_SIDE_CENTERED) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_BRIGHTNESS_ONLY
+                local.repo.edgeSideList = PRESET_SIDE_CENTERED
+            },
             headlineContent = { Text(strings.stmt.preset_brightness_c_headline) },
             supportingContent = { Text(strings.stmt.preset_brightness_c_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_DOUBLE_BRIGHTNESS, PRESET_SIDE_STANDARD) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_DOUBLE_BRIGHTNESS
+                local.repo.edgeSideList = PRESET_SIDE_STANDARD
+            },
             headlineContent = { Text(strings.stmt.preset_brightness_d_headline) },
             supportingContent = { Text(strings.stmt.preset_brightness_d_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable { local.clearAndSetEdgeDataList(PRESET_POS_DOUBLE_BRIGHTNESS, PRESET_SIDE_CENTERED) },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = PRESET_POS_DOUBLE_BRIGHTNESS
+                local.repo.edgeSideList = PRESET_SIDE_CENTERED
+            },
             headlineContent = { Text(strings.stmt.preset_brightness_dc_headline) },
             supportingContent = { Text(strings.stmt.preset_brightness_dc_supporting) }
         )
 
         ListSectionTitle(title = strings.label.utility)
         ListItem(
-            modifier = Modifier
-                .clickable {
-                    local.editEachEdgeData {
-                        it.copy(color = Color(it.color).copy(alpha = 1f).toArgb())
-                    }
-                },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = local.repo.edgePosList.map {
+                    it.copy(color = Color(it.color).copy(alpha = 1f).toArgb())
+                }
+            },
             headlineContent = { Text(strings.stmt.show_all_headline) },
             supportingContent = { Text(strings.stmt.show_all_supporting) }
         )
         ListItem(
-            modifier = Modifier
-                .clickable {
-                    local.editEachEdgeData {
-                        it.copy(color = Color(it.color).copy(alpha = .01f).toArgb())
-                    }
-                },
+            modifier = Modifier.clickable {
+                local.repo.edgePosList = local.repo.edgePosList.map {
+                    it.copy(color = Color(it.color).copy(alpha = .01f).toArgb())
+                }
+            },
             headlineContent = { Text(strings.stmt.hide_all_headline) },
             supportingContent = { Text(strings.stmt.hide_all_supporting) }
         )

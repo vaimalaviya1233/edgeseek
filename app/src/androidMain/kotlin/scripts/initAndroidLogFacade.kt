@@ -9,15 +9,15 @@ import kotlinx.coroutines.flow.flowOn
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.util.SimpleLogFormatter
 
-@Suppress("FunctionName")
-fun Local.init_log_facade() {
-    val formatter = SimpleLogFormatter(timeZone, clock)
+context(local: Local)
+fun initAndroidLogFacade() {
+    val formatter = SimpleLogFormatter(local.timeZone, local.clock)
 
     // Initialize kermit writers with format
     Logger.setLogWriters(LogcatWriter(formatter))
 
     // Cold flow for everyone wanting to read the full log.
-    fullLog = flow {
+    local.fullLog = flow {
         val p = Runtime.getRuntime().exec("logcat")
 
         try {

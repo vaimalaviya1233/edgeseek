@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,19 +20,18 @@ import androidx.compose.ui.unit.sp
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.l10n.strings
-import net.lsafer.sundry.compose.util.SubscribeEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+context(local: Local)
 fun LogPage(
-    local: Local,
     route: UniRoute.LogPage,
     modifier: Modifier = Modifier
 ) {
     val logs = remember { mutableStateListOf<String>() }
 
-    SubscribeEffect(local.fullLog) {
-        logs += it
+    LaunchedEffect(Unit) {
+        local.fullLog.collect { logs += it }
     }
 
     Scaffold(

@@ -1,8 +1,10 @@
 package net.lsafer.edgeseek.app.util
 
 import co.touchlab.kermit.*
-import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 
 class SimpleLogWriter(
@@ -23,9 +25,9 @@ class SimpleLogFormatter(
 
         append(datetime.year)
         append('-')
-        append(datetime.monthNumber)
+        append(datetime.month.number)
         append('-')
-        append(datetime.dayOfMonth)
+        append(datetime.day)
         append(' ')
         append(datetime.hour)
         append(':')

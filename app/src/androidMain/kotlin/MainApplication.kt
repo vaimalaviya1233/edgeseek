@@ -18,26 +18,51 @@ package net.lsafer.edgeseek.app
 import android.app.Application
 import android.content.Intent
 import android.os.Build
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import net.lsafer.compose.simplenav.InMemorySimpleNavController
+import net.lsafer.edgeseek.app.data.options.AndroidVars
+import net.lsafer.edgeseek.app.data.options.Options
+import net.lsafer.optionkt.compileOptionSource
+import net.lsafer.optionkt.decodeJsonOptionSource
+import okio.Path.Companion.toOkioPath
 
 class MainApplication : Application() {
     companion object {
         lateinit var globalLocal: Local
+        lateinit var globalNavCtrl: UniNavController
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        globalLocal = runBlocking {
-            createAndroidLocal(this@MainApplication)
+        runBlocking {
+            val options = BuildConfig.CONFIG_STRING
+                .decodeJsonOptionSource()
+                .compileOptionSource<Options>()
+
+            val vars = AndroidVars(
+                dataDir = filesDir.toOkioPath(),
+                cacheDir = cacheDir.toOkioPath(),
+            )
+
+            val local = createAndroidLocal(options, vars)
+            val navCtrl = InMemorySimpleNavController<UniRoute>(
+                entries = when {
+                    !local.repo.introduced ->
+                        listOf(UniRoute.IntroductionWizard())
+
+                    else ->
+                        listOf(UniRoute.HomePage)
+                },
+            )
+
+            globalLocal = local
+            globalNavCtrl = navCtrl
         }
 
-        globalLocal.eventbus
-            .filterIsInstance<UniEvent.StartService>()
-            .onEach {
+        globalLocal.ioScope.launch {
+            for (it in globalLocal.eventBus.startService) {
                 val context = this@MainApplication
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -45,6 +70,6 @@ class MainApplication : Application() {
                 else
                     startService(Intent(context, MainService::class.java))
             }
-            .launchIn(globalLocal.ioScope)
+        }
     }
 }

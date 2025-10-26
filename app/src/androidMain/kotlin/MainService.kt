@@ -25,10 +25,14 @@ import android.graphics.Point
 import android.os.Build
 import android.os.IBinder
 import android.view.WindowManager
+import androidx.compose.runtime.snapshotFlow
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.runningReduce
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
@@ -39,9 +43,9 @@ import net.lsafer.edgeseek.app.impl.CustomToastFacade
 import net.lsafer.edgeseek.app.impl.ImplLocal
 import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
 import net.lsafer.edgeseek.app.receiver.ScreenOffBroadCastReceiver
-import net.lsafer.sundry.storage.select
 
 class MainService : Service() {
+    private val local = globalLocal
     private val implLocal = ImplLocal()
     private var launchedEdgeViewJobsSubJobFlow = MutableSharedFlow<Job>(1)
 
@@ -50,7 +54,6 @@ class MainService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        implLocal.local = globalLocal
         implLocal.context = this
         implLocal.defaultScope = CoroutineScope(
             Dispatchers.Default + SupervisorJob() +
@@ -63,12 +66,7 @@ class MainService : Service() {
         startForeground()
 
         implLocal.defaultScope.launch {
-            val activated = implLocal.local.dataStore
-                .select<Boolean>(PK_FLAG_ACTIVATED)
-                .firstOrNull()
-                ?: false
-
-            if (!activated) {
+            if (!local.repo.activated) {
                 stopSelf()
                 return@launch
             }
@@ -91,7 +89,7 @@ class MainService : Service() {
     }
 
     @Suppress("DEPRECATION")
-    private fun launchEdgeViewJobsSubJob() {
+    private fun launchEdgeViewJobsSubJob() = context(implLocal) {
         val windowManager = getSystemService<WindowManager>()!!
         val display = windowManager.defaultDisplay
         val displayRotation = display.rotation
@@ -122,19 +120,20 @@ class MainService : Service() {
 
             launch(subJob) {
                 for (side in EdgeSide.entries) {
-                    val sideDataFlow = implLocal.local.dataStore
-                        .select<EdgeSideData>(side.key)
-                        .map { it ?: EdgeSideData(side) }
-                        .distinctUntilChanged()
+                    val sideDataFlow = snapshotFlow {
+                        local.repo.edgeSideList
+                            .find { it.side.key == side.key }
+                            ?: EdgeSideData(side)
+                    }
 
                     for (pos in EdgePos.entries.filter { it.side == side }) {
-                        val posDataFlow = implLocal.local.dataStore
-                            .select<EdgePosData>(pos.key)
-                            .map { it ?: EdgePosData(pos) }
-                            .distinctUntilChanged()
+                        val posDataFlow = snapshotFlow {
+                            local.repo.edgePosList
+                                .find { it.pos.key == pos.key }
+                                ?: EdgePosData(pos)
+                        }
 
                         launchEdgeViewJob(
-                            implLocal = implLocal,
                             windowManager = windowManager,
                             displayRotation = displayRotation,
                             displayHeight = displayHeight,
@@ -159,9 +158,8 @@ class MainService : Service() {
     }
 
     private fun launchSelfStopSubJob() {
-        implLocal.local.dataStore
-            .select<Boolean>(PK_FLAG_ACTIVATED)
-            .onEach { if (it == null || !it) stopSelf() }
+        snapshotFlow { local.repo.activated }
+            .onEach { if (!it) stopSelf() }
             .launchIn(implLocal.defaultScope)
     }
 
@@ -177,7 +175,7 @@ class MainService : Service() {
 
     private fun startForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val strings = implLocal.local.l10nState.value.strings
+            val strings = local.infoStore.strings
             val title = strings.stmt.foreground_noti_title
             val description = strings.stmt.foreground_noti_text
 

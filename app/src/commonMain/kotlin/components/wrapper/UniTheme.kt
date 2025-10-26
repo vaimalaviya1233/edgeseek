@@ -21,30 +21,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import net.lsafer.edgeseek.app.*
-import net.lsafer.sundry.storage.select
 
 @Composable
-fun UniTheme(local: Local, content: @Composable () -> Unit) {
-    val uiColors by produceState(UI_COLORS_DEFAULT, local) {
-        local.dataStore
-            .select<String>(PK_UI_COLORS)
-            .filterNotNull()
-            .distinctUntilChanged()
-            .collect { value = it }
-    }
-
+context(local: Local)
+fun UniTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = when (uiColors) {
+        colorScheme = when (local.repo.uiColors) {
             UI_COLORS_BLACK -> BlackColorPalette
             UI_COLORS_DARK -> DarkColorPalette
             UI_COLORS_LIGHT -> LightColorPalette

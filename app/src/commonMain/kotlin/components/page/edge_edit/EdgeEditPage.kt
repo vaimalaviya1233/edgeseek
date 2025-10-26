@@ -21,26 +21,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.UniRoute
-import net.lsafer.edgeseek.app.components.common.editEdgeData
 import net.lsafer.edgeseek.app.components.lib.*
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.OrientationFilter
 import net.lsafer.edgeseek.app.l10n.strings
-import net.lsafer.sundry.storage.select
 
 @Composable
+context(local: Local)
 fun EdgeEditPage(
-    local: Local,
     route: UniRoute.EdgeEditPage,
     modifier: Modifier = Modifier,
 ) {
@@ -53,26 +49,23 @@ fun EdgeEditPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        EdgeEditPageContent(local, route.pos, Modifier.padding(innerPadding))
+        EdgeEditPageContent(route.pos, Modifier.padding(innerPadding))
     }
 }
 
 @Composable
+context(local: Local)
 fun EdgeEditPageContent(
-    local: Local,
     pos: EdgePos,
     modifier: Modifier = Modifier,
 ) {
-    val data by produceState(EdgePosData(pos), pos, local) {
-        local.dataStore
-            .select<EdgePosData>(pos.key)
-            .filterNotNull()
-            .distinctUntilChanged()
-            .collect { value = it }
+    val data by derivedStateOf {
+        local.repo.edgePosList.find { it.pos == pos }
+            ?: EdgePosData(pos)
     }
 
     fun edit(block: (EdgePosData) -> EdgePosData) {
-        local.editEdgeData(pos, block)
+        local.repo.edgePosList += block(data)
     }
 
     Column(

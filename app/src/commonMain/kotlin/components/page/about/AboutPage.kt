@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.BuildConfig
 import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.UniEvent
+import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
@@ -38,8 +38,8 @@ import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
+context(local: Local, navCtrl: UniNavController)
 fun AboutPage(
-    local: Local,
     route: UniRoute.AboutPage,
     modifier: Modifier = Modifier,
 ) {
@@ -52,26 +52,23 @@ fun AboutPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        AboutPageContent(local, Modifier.padding(innerPadding))
+        AboutPageContent(Modifier.padding(innerPadding))
     }
 }
 
 @Composable
-fun AboutPageContent(
-    local: Local,
-    modifier: Modifier = Modifier,
-) {
+context(local: Local, navCtrl: UniNavController)
+fun AboutPageContent(modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
 
     fun openIntroductionWizard() {
         @Suppress("ControlFlowWithEmptyBody")
-        while (local.navController.back());
-        local.navController.push(UniRoute.IntroductionWizard())
+        while (navCtrl.back());
+        navCtrl.push(UniRoute.IntroductionWizard())
     }
 
     fun openUrl(url: String) = coroutineScope.launch {
-        val event = UniEvent.OpenUrlRequest(url)
-        local.eventbus.emit(event)
+        local.eventBus.openUrl.send(url)
     }
 
     Column(
@@ -122,7 +119,7 @@ fun AboutPageContent(
         )
         ListItem(
             modifier = Modifier
-                .clickable { local.navController.push(UniRoute.LogPage) },
+                .clickable { navCtrl.push(UniRoute.LogPage) },
             headlineContent = { Text(strings.stmt.page_log_headline) },
             supportingContent = { Text(strings.stmt.page_log_supporting) },
         )

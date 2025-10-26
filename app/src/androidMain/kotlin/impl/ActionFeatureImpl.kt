@@ -15,10 +15,12 @@ sealed class ActionFeatureImpl {
         }
     }
 
-    abstract fun execute(implLocal: ImplLocal)
+    context(implLocal: ImplLocal)
+    abstract fun execute()
 
     data object ExpandStatusBar : ActionFeatureImpl() {
-        override fun execute(implLocal: ImplLocal) {
+        context(implLocal: ImplLocal)
+        override fun execute() {
             try {
                 //noinspection JavaReflectionMemberAccess, WrongConstant
                 Class.forName("android.app.StatusBarManager")

@@ -20,10 +20,11 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
+import net.lsafer.edgeseek.app.MainApplication.Companion.globalNavCtrl
 import net.lsafer.edgeseek.app.components.window.main.MainWindow
 import net.lsafer.edgeseek.app.components.wrapper.AndroidUniLocaleProvider
 import net.lsafer.edgeseek.app.components.wrapper.AndroidUniWindowCompat
@@ -33,18 +34,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+        val local = globalLocal
+        val navCtrl = globalNavCtrl
+
         setContent {
-            val local = globalLocal
-            val activity = this@MainActivity
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-            AndroidUniLocaleProvider(local) {
-                AndroidUniWindowCompat(local, activity) {
-                    UniTheme(local) {
-                        Surface(color = MaterialTheme.colorScheme.background) {
-                            MainWindow(local)
+            context(local, navCtrl) {
+                AndroidUniLocaleProvider {
+                    AndroidUniWindowCompat {
+                        UniTheme {
+                            Surface(color = MaterialTheme.colorScheme.background) {
+                                MainWindow()
+                            }
                         }
                     }
                 }
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
         super.onResume()
 
         globalLocal.ioScope.launch {
-            globalLocal.eventbus.emit(UniEvent.StartService)
+            globalLocal.eventBus.startService.send(Unit)
         }
     }
 }
