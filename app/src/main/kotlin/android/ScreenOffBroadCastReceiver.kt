@@ -21,12 +21,12 @@ import android.content.Intent
 import android.provider.Settings
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.ImplLocal
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
 
 // Used @JvmOverloads afraid android **might** try instantiating it
 open class ScreenOffBroadCastReceiver @JvmOverloads constructor(
-    private val implLocal: ImplLocal? = null,
+    private val local: Local? = null,
 ) : BroadcastReceiver() {
     companion object {
         private val logger = Logger.withTag(ScreenOffBroadCastReceiver::class.qualifiedName!!)
@@ -44,7 +44,7 @@ open class ScreenOffBroadCastReceiver @JvmOverloads constructor(
                         Settings.System.SCREEN_BRIGHTNESS_MODE,
                         Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
                     )
-                    implLocal?.dimmer?.update(0)
+                    local?.dimmer?.update(0)
                 } catch (e: Exception) {
                     logger.e("Couldn't toggle auto brightness", e)
                 }

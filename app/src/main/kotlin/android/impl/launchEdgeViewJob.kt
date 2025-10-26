@@ -1,6 +1,7 @@
 package net.lsafer.edgeseek.app.impl
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.view.Gravity
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import net.lsafer.edgeseek.app.ImplLocal
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.EdgeCorner
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
@@ -24,7 +25,7 @@ import kotlin.math.roundToInt
 private val logger = Logger.withTag("net.lsafer.edgeseek.app.impl.launchEdgeViewJob")
 
 @SuppressLint("RtlHardcoded", "ClickableViewAccessibility")
-context(coroutineScope: CoroutineScope, implLocal: ImplLocal)
+context(ctx: Context, local: Local, coroutineScope: CoroutineScope)
 fun launchEdgeViewJob(
     windowManager: WindowManager,
     displayRotation: Int,
@@ -34,7 +35,7 @@ fun launchEdgeViewJob(
     sideDataFlow: Flow<EdgeSideData>,
     posDataFlow: Flow<EdgePosData>,
 ): Job {
-    val view = CardView(implLocal.context)
+    val view = CardView(ctx)
     view.radius = 25f
     view.elevation = 1f
 
@@ -99,7 +100,8 @@ fun launchEdgeViewJob(
 
             view.setOnTouchListener(
                 EdgeTouchListener(
-                    implLocal = implLocal,
+                    ctx = ctx,
+                    local = local,
                     edgePosData = posData,
                     edgeSide = sideRotated,
                     dpi = displayDensityDpi,

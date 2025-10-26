@@ -15,11 +15,12 @@
  */
 package net.lsafer.edgeseek.app.impl
 
+import android.content.Context
 import android.media.AudioManager
 import android.provider.Settings
 import androidx.core.content.getSystemService
 import co.touchlab.kermit.Logger
-import net.lsafer.edgeseek.app.ImplLocal
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.ControlFeature
 
 sealed class ControlFeatureImpl {
@@ -39,46 +40,46 @@ sealed class ControlFeatureImpl {
         }
     }
 
-    context(implLocal: ImplLocal)
+    context(_: Context, _: Local)
     abstract fun fetchRange(): IntRange
 
-    context(implLocal: ImplLocal)
+    context(_: Context, _: Local)
     open fun fetchStepRange(sign: Int) = fetchRange()
 
-    context(implLocal: ImplLocal)
+    context(_: Context, _: Local)
     abstract fun fetchValue(): Int
 
-    context(implLocal: ImplLocal)
+    context(_: Context, _: Local)
     abstract fun updateValue(newValue: Int, showSystemPanel: Boolean): Int
 
     data object Brightness : ControlFeatureImpl() {
-        context(implLocal: ImplLocal)
+        context(_: Context, _: Local)
         override fun fetchRange() = 0..255
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, _: Local)
         override fun fetchValue(): Int {
             return Settings.System.getInt(
-                implLocal.context.contentResolver,
+                ctx.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS,
             )
         }
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, local: Local)
         override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
             val newSystemValue = newValue.coerceIn(0..255)
 
             try {
                 Settings.System.putInt(
-                    implLocal.context.contentResolver,
+                    ctx.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS_MODE,
                     Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,
                 )
                 Settings.System.putInt(
-                    implLocal.context.contentResolver,
+                    ctx.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS,
                     newSystemValue,
                 )
-                implLocal.dimmer.update(0)
+                local.dimmer.update(0)
                 return newSystemValue
             } catch (e: Exception) {
                 logger.e("Couldn't update brightness level", e)
@@ -88,10 +89,10 @@ sealed class ControlFeatureImpl {
     }
 
     data object BrightnessWithDimmer : ControlFeatureImpl() {
-        context(implLocal: ImplLocal)
+        context(_: Context, _: Local)
         override fun fetchRange() = -255..255
 
-        context(implLocal: ImplLocal)
+        context(_: Context, _: Local)
         override fun fetchStepRange(sign: Int): IntRange {
             val value = fetchValue()
             return when {
@@ -103,33 +104,33 @@ sealed class ControlFeatureImpl {
             }
         }
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, local: Local)
         override fun fetchValue(): Int {
             val currentSystemValue = Settings.System.getInt(
-                implLocal.context.contentResolver,
+                ctx.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS,
             )
-            val currentDimmerValue = implLocal.dimmer.currentValue
+            val currentDimmerValue = local.dimmer.currentValue
             return currentSystemValue - currentDimmerValue
         }
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, local: Local)
         override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
             val newSystemValue = newValue.coerceIn(0..255)
             val newDimmerValue = -newValue.coerceIn(-255..0)
 
             try {
                 Settings.System.putInt(
-                    implLocal.context.contentResolver,
+                    ctx.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS_MODE,
                     Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,
                 )
                 Settings.System.putInt(
-                    implLocal.context.contentResolver,
+                    ctx.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS,
                     newSystemValue,
                 )
-                implLocal.dimmer.update(newDimmerValue)
+                local.dimmer.update(newDimmerValue)
                 return newSystemValue - newDimmerValue
             } catch (e: Exception) {
                 logger.e("Couldn't update brightness (with dimmer) level", e)
@@ -144,22 +145,22 @@ sealed class ControlFeatureImpl {
         data object Ring : Audio(AudioManager.STREAM_RING)
         data object System : Audio(AudioManager.STREAM_SYSTEM)
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, _: Local)
         override fun fetchRange(): IntRange {
-            val manager = implLocal.context.getSystemService<AudioManager>()!!
+            val manager = ctx.getSystemService<AudioManager>()!!
             val maximumValue = manager.getStreamMaxVolume(streamType)
             return 0..maximumValue
         }
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, _: Local)
         override fun fetchValue(): Int {
-            val manager = implLocal.context.getSystemService<AudioManager>()!!
+            val manager = ctx.getSystemService<AudioManager>()!!
             return manager.getStreamVolume(streamType)
         }
 
-        context(implLocal: ImplLocal)
+        context(ctx: Context, _: Local)
         override fun updateValue(newValue: Int, showSystemPanel: Boolean): Int {
-            val manager = implLocal.context.getSystemService(AudioManager::class.java)
+            val manager = ctx.getSystemService(AudioManager::class.java)
             val maximumValue = manager.getStreamMaxVolume(streamType)
             val newSystemValue = newValue.coerceIn(0..maximumValue)
 

@@ -38,33 +38,28 @@ import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
-import net.lsafer.edgeseek.app.impl.CustomDimmerFacade
-import net.lsafer.edgeseek.app.impl.CustomToastFacade
 import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
 import net.lsafer.edgeseek.app.receiver.ScreenOffBroadCastReceiver
 
 class MainService : Service() {
     private val local = globalLocal
-    private val implLocal = ImplLocal()
     private var launchedEdgeViewJobsSubJobFlow = MutableSharedFlow<Job>(1)
+
+    private val coroutineScope = CoroutineScope(
+        CoroutineName("MainServiceScope") + Dispatchers.Default + SupervisorJob() +
+                CoroutineExceptionHandler { _, e ->
+                    moduleLogger.e("Unhandled coroutine exception", e)
+                }
+    )
 
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
 
     override fun onCreate() {
         super.onCreate()
-        implLocal.context = this
-        implLocal.defaultScope = CoroutineScope(
-            Dispatchers.Default + SupervisorJob() +
-                    CoroutineExceptionHandler { _, e ->
-                        moduleLogger.e("Unhandled coroutine exception", e)
-                    }
-        )
-        implLocal.toast = CustomToastFacade(this)
-        implLocal.dimmer = CustomDimmerFacade(this)
         startForeground()
 
-        implLocal.defaultScope.launch {
+        coroutineScope.launch {
             if (!local.repo.activated) {
                 stopSelf()
                 return@launch
@@ -79,7 +74,7 @@ class MainService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        implLocal.defaultScope.cancel()
+        coroutineScope.cancel()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -88,7 +83,7 @@ class MainService : Service() {
     }
 
     @Suppress("DEPRECATION")
-    private fun launchEdgeViewJobsSubJob() = context(implLocal) {
+    private fun launchEdgeViewJobsSubJob() = context(local) {
         val windowManager = getSystemService<WindowManager>()!!
         val display = windowManager.defaultDisplay
         val displayRotation = display.rotation
@@ -112,9 +107,9 @@ class MainService : Service() {
             displayHeight = displayRealSize.y
         }
 
-        val subJob = Job(implLocal.defaultScope.coroutineContext.job)
+        val subJob = Job(coroutineScope.coroutineContext.job)
 
-        implLocal.defaultScope.launch {
+        coroutineScope.launch {
             launchedEdgeViewJobsSubJobFlow.emit(subJob)
 
             launch(subJob) {
@@ -153,21 +148,21 @@ class MainService : Service() {
                 oldJob.cancel()
                 newJob
             }
-            .launchIn(implLocal.defaultScope)
+            .launchIn(coroutineScope)
     }
 
     private fun launchSelfStopSubJob() {
         snapshotFlow { local.repo.activated }
             .onEach { if (!it) stopSelf() }
-            .launchIn(implLocal.defaultScope)
+            .launchIn(coroutineScope)
     }
 
     private fun launchReceiverJob() {
-        val screenOffReceiver = ScreenOffBroadCastReceiver(implLocal)
+        val screenOffReceiver = ScreenOffBroadCastReceiver()
 
         registerReceiver(screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
 
-        implLocal.defaultScope.coroutineContext.job.invokeOnCompletion {
+        coroutineScope.coroutineContext.job.invokeOnCompletion {
             unregisterReceiver(screenOffReceiver)
         }
     }

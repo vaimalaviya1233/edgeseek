@@ -8,6 +8,8 @@ import net.lsafer.edgeseek.app.data.options.AndroidVars
 import net.lsafer.edgeseek.app.scripts.initAndroidLogFacade
 import net.lsafer.edgeseek.app.scripts.initAndroidRepositories
 import net.lsafer.edgeseek.app.scripts.registerAndroidShutdownHook
+import net.lsafer.edgeseek.app.impl.CustomDimmerFacade
+import net.lsafer.edgeseek.app.impl.CustomToastFacade
 import kotlin.random.Random
 import kotlin.time.Clock
 
@@ -24,6 +26,8 @@ suspend fun createAndroidLocal(vars: AndroidVars): Local {
                 }
     )
     local.snackbar = SnackbarHostState()
+    local.toast = CustomToastFacade(app)
+    local.dimmer = CustomDimmerFacade(app)
     context(local) {
         registerAndroidShutdownHook()
         initAndroidLogFacade()

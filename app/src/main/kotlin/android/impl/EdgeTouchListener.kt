@@ -1,6 +1,7 @@
 package net.lsafer.edgeseek.app.impl
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.SystemClock
 import android.os.VibrationEffect
@@ -8,13 +9,14 @@ import android.os.Vibrator
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import net.lsafer.edgeseek.app.ImplLocal
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import kotlin.math.abs
 
 class EdgeTouchListener(
-    private val implLocal: ImplLocal,
+    private val ctx: Context,
+    private val local: Local,
     private val edgePosData: EdgePosData,
     private val edgeSide: EdgeSide,
     private val dpi: Int,
@@ -28,7 +30,7 @@ class EdgeTouchListener(
     private val onSwipeLeft: ActionFeatureImpl?,
     private val onSwipeRight: ActionFeatureImpl?,
 ) : View.OnTouchListener, GestureDetector.SimpleOnGestureListener() {
-    private val detector = GestureDetector(implLocal.context, this)
+    private val detector = GestureDetector(ctx, this)
 
     private val xSeekSensitivityFactor = 155f * dpi
     private val xSwipeThresholdDistant = 10f * dpi
@@ -84,7 +86,7 @@ class EdgeTouchListener(
         return true
     }
 
-    override fun onDoubleTap(e: MotionEvent): Boolean = context(implLocal) {
+    override fun onDoubleTap(e: MotionEvent): Boolean = context(ctx, local) {
         if (onDoubleClick != null) {
             mIsDone = true
             doFeedbackVibration()
@@ -95,7 +97,7 @@ class EdgeTouchListener(
         return false
     }
 
-    override fun onLongPress(e: MotionEvent) = context(implLocal) {
+    override fun onLongPress(e: MotionEvent) = context(ctx, local) {
         if (onLongClick != null) {
             mIsDone = true
             doFeedbackVibration()
@@ -116,7 +118,7 @@ class EdgeTouchListener(
         e2: MotionEvent,
         distanceX: Float,
         distanceY: Float,
-    ): Boolean = context(implLocal) {
+    ): Boolean = context(ctx, local) {
         e1 ?: return false
         onSeekImpl ?: return false
         if (mIsDone) return false
@@ -157,7 +159,7 @@ class EdgeTouchListener(
         val value = onSeekImpl.updateValue(newValueCoerced, edgePosData.feedbackSystemPanel)
 
         if (edgePosData.feedbackToast) {
-            implLocal.toast.update("$value")
+            local.toast.update("$value")
         }
 
         return false
@@ -168,7 +170,7 @@ class EdgeTouchListener(
         e2: MotionEvent,
         velocityX: Float,
         velocityY: Float,
-    ): Boolean = context(implLocal) {
+    ): Boolean = context(ctx, local) {
         val isVLeaning = abs(velocityX) < abs(velocityY)
         val isVFling = abs(velocityY) > xSwipeThresholdDistant
         val isHFling = abs(velocityX) > xSwipeThresholdDistant
@@ -208,7 +210,7 @@ class EdgeTouchListener(
 
     private fun doFeedbackVibration() {
         if (edgePosData.feedbackVibration > 0) {
-            val vibrator = implLocal.context.getSystemService(Vibrator::class.java)
+            val vibrator = ctx.getSystemService(Vibrator::class.java)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 vibrator.vibrate(
@@ -223,10 +225,10 @@ class EdgeTouchListener(
         }
     }
 
-    private fun doFeedbackToast() = context(implLocal) {
+    private fun doFeedbackToast() = context(ctx, local) {
         if (onSeekImpl != null && edgePosData.feedbackToast) {
             val value = onSeekImpl.fetchValue()
-            implLocal.toast.update("$value")
+            local.toast.update("$value")
         }
     }
 }
