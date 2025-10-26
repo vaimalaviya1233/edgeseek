@@ -1,6 +1,7 @@
 package net.lsafer.edgeseek.app.impl
 
 import co.touchlab.kermit.Logger
+import net.lsafer.edgeseek.app.ImplLocal
 import net.lsafer.edgeseek.app.data.settings.ActionFeature
 
 sealed class ActionFeatureImpl {

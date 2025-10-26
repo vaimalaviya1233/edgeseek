@@ -1,10 +1,8 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.gradleup.patrouille)
-
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.jetbrains.compose)
 }
 
 compatPatrouille {
@@ -19,40 +17,49 @@ kotlin {
         optIn.add("kotlin.time.ExperimentalTime")
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
     }
-    sourceSets.commonMain.dependencies {
-        // ##### Official Dependencies #####
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.datetime)
+}
 
-        implementation(libs.okio)
+dependencies {
+    val implementation = "implementation"
+    val coreLibraryDesugaring = "coreLibraryDesugaring"
 
-        // ##### Builtin Dependencies #####
-        implementation(compose.runtime)
-        implementation(compose.foundation)
-        implementation(compose.material3)
-        implementation(compose.material3AdaptiveNavigationSuite)
-        implementation(compose.materialIconsExtended)
-        implementation(compose.ui)
-        implementation(compose.components.resources)
-        implementation(compose.components.uiToolingPreview)
+    // ##### Official Dependencies #####
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.datetime)
 
-        // ##### Internal Dependencies #####
+    implementation(libs.okio)
 
-        implementation(libs.optionkt)
-        implementation(libs.extkt.json)
+    // ##### Builtin Dependencies #####
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
 
-        implementation(libs.lsafer.compose.simplenav)
+    // ##### Internal Dependencies #####
 
-        // ##### Community Dependencies #####
+    implementation(libs.optionkt)
+    implementation(libs.extkt.json)
 
-        implementation(libs.touchlab.kermit)
+    implementation(libs.lsafer.compose.simplenav)
 
-        // ##### ANDROID Dependencies #####
+    // ##### Community Dependencies #####
 
-        implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.touchlab.kermit)
 
-        implementation(libs.androidx.lifecycle.viewmodel)
-        implementation(libs.androidx.lifecycle.viewmodel.compose)
-    }
+    implementation(libs.godaddy.colorpickerCompose)
+
+    // ##### ANDROID Dependencies #####
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.cardview)
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }

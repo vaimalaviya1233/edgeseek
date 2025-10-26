@@ -19,6 +19,7 @@ import android.media.AudioManager
 import android.provider.Settings
 import androidx.core.content.getSystemService
 import co.touchlab.kermit.Logger
+import net.lsafer.edgeseek.app.ImplLocal
 import net.lsafer.edgeseek.app.data.settings.ControlFeature
 
 sealed class ControlFeatureImpl {

@@ -8,6 +8,7 @@ import android.os.Vibrator
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import net.lsafer.edgeseek.app.ImplLocal
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import kotlin.math.abs

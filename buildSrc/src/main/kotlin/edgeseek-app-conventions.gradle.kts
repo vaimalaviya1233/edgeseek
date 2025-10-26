@@ -3,20 +3,6 @@ plugins {
     id("edgeseek-base-conventions")
 }
 
-kotlin {
-    androidTarget()
-    sourceSets.androidMain.dependencies {
-        implementation(compose.preview)
-
-        implementation(libs.androidx.core.ktx)
-        implementation(libs.androidx.activity.compose)
-        implementation(libs.androidx.appcompat)
-        implementation(libs.androidx.cardview)
-
-        implementation(libs.godaddy.colorpickerCompose)
-    }
-}
-
 android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -62,8 +48,4 @@ android {
     buildFeatures {
         compose = true
     }
-}
-
-dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }

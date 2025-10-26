@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import net.lsafer.edgeseek.app.ImplLocal
 import net.lsafer.edgeseek.app.data.settings.EdgeCorner
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
