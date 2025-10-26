@@ -40,7 +40,6 @@ import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import net.lsafer.edgeseek.app.impl.CustomDimmerFacade
 import net.lsafer.edgeseek.app.impl.CustomToastFacade
-import net.lsafer.edgeseek.app.impl.ImplLocal
 import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
 import net.lsafer.edgeseek.app.receiver.ScreenOffBroadCastReceiver
 

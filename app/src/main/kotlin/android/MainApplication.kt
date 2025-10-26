@@ -22,9 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.lsafer.compose.simplenav.InMemorySimpleNavController
 import net.lsafer.edgeseek.app.data.options.AndroidVars
-import net.lsafer.edgeseek.app.data.options.Options
-import net.lsafer.optionkt.compileOptionSource
-import net.lsafer.optionkt.decodeJsonOptionSource
 import okio.Path.Companion.toOkioPath
 
 class MainApplication : Application() {
@@ -37,16 +34,12 @@ class MainApplication : Application() {
         super.onCreate()
 
         runBlocking {
-            val options = BuildConfig.CONFIG_STRING
-                .decodeJsonOptionSource()
-                .compileOptionSource<Options>()
-
             val vars = AndroidVars(
                 dataDir = filesDir.toOkioPath(),
                 cacheDir = cacheDir.toOkioPath(),
             )
 
-            val local = createAndroidLocal(options, vars)
+            val local = createAndroidLocal(vars)
             val navCtrl = InMemorySimpleNavController<UniRoute>(
                 entries = when {
                     !local.repo.introduced ->

@@ -23,7 +23,6 @@ import co.touchlab.kermit.Logger
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.ImplLocal
 import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
-import net.lsafer.edgeseek.app.impl.ImplLocal
 
 // Used @JvmOverloads afraid android **might** try instantiating it
 open class ScreenOffBroadCastReceiver @JvmOverloads constructor(

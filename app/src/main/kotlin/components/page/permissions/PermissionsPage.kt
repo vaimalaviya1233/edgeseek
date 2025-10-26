@@ -25,6 +25,6 @@ fun PermissionsPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        // PermissionsPageContent(Modifier.padding(innerPadding)) // fixme
+        PermissionsPageContent(Modifier.padding(innerPadding))
     }
 }

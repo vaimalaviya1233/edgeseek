@@ -61,9 +61,11 @@ fun EdgeEditPageContent(
     pos: EdgePos,
     modifier: Modifier = Modifier,
 ) {
-    val data by derivedStateOf {
-        local.repo.edgePosList.find { it.pos == pos }
-            ?: EdgePosData(pos)
+    val data by remember {
+        derivedStateOf {
+            local.repo.edgePosList.find { it.pos == pos }
+                ?: EdgePosData(pos)
+        }
     }
 
     fun edit(block: (EdgePosData) -> EdgePosData) {

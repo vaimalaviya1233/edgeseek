@@ -91,9 +91,11 @@ fun EdgeListPageContent(modifier: Modifier = Modifier) {
                 MobileModel(Modifier.fillMaxSize())
 
                 for (side in EdgeSide.entries) {
-                    val sideData by derivedStateOf {
-                        local.repo.edgeSideList.find { it.side == side }
-                            ?: EdgeSideData(side)
+                    val sideData by remember {
+                        derivedStateOf {
+                            local.repo.edgeSideList.find { it.side == side }
+                                ?: EdgeSideData(side)
+                        }
                     }
 
                     EdgeSideItem(sideData)
@@ -155,9 +157,11 @@ private fun BoxScope.EdgeItem(
         }
     }
 
-    val data by derivedStateOf {
-        local.repo.edgePosList.find { it.pos == pos }
-            ?: EdgePosData(pos)
+    val data by remember {
+        derivedStateOf {
+            local.repo.edgePosList.find { it.pos == pos }
+                ?: EdgePosData(pos)
+        }
     }
 
     val thickness = 24.dp

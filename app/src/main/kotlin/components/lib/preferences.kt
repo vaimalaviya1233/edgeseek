@@ -30,7 +30,9 @@ fun ColorPreferenceListItem(
     modifier: Modifier = Modifier,
 ) {
     var localValueString by remember(value) { mutableStateOf(value.toHexString()) }
-    val localValueInt by derivedStateOf { runCatching { localValueString.hexToInt() }.getOrNull() }
+    val localValueInt by remember {
+        derivedStateOf { runCatching { localValueString.hexToInt() }.getOrNull() }
+    }
 
     var isMenuOpen by remember { mutableStateOf(false) }
 
