@@ -122,6 +122,12 @@ class MainRepository(
             }
         },
     )
+
+    operator fun get(side: EdgeSide) =
+        edgeSideList.find { it.side == side } ?: EdgeSideData(side)
+
+    operator fun get(pos: EdgePos) =
+        edgePosList.find { it.pos == pos } ?: EdgePosData(pos)
 }
 
 private inline fun <T> createCachedProperty(

@@ -27,9 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.components.lib.*
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
@@ -61,12 +61,7 @@ fun EdgeEditPageContent(
     pos: EdgePos,
     modifier: Modifier = Modifier,
 ) {
-    val data by remember {
-        derivedStateOf {
-            local.repo.edgePosList.find { it.pos == pos }
-                ?: EdgePosData(pos)
-        }
-    }
+    val data by remember { derivedStateOf { local.repo[pos] } }
 
     fun edit(block: (EdgePosData) -> EdgePosData) {
         local.repo.edgePosList += block(data)

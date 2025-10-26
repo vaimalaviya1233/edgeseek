@@ -38,9 +38,7 @@ import kotlinx.coroutines.flow.runningReduce
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 import net.lsafer.edgeseek.app.data.settings.EdgePos
-import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
-import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
 
 class MainService : Service() {
@@ -125,18 +123,10 @@ class MainService : Service() {
 
             launch(subJob) {
                 for (side in EdgeSide.entries) {
-                    val sideDataFlow = snapshotFlow {
-                        local.repo.edgeSideList
-                            .find { it.side.key == side.key }
-                            ?: EdgeSideData(side)
-                    }
+                    val sideDataFlow = snapshotFlow { local.repo[side] }
 
                     for (pos in EdgePos.entries.filter { it.side == side }) {
-                        val posDataFlow = snapshotFlow {
-                            local.repo.edgePosList
-                                .find { it.pos.key == pos.key }
-                                ?: EdgePosData(pos)
-                        }
+                        val posDataFlow = snapshotFlow { local.repo[pos] }
 
                         launchEdgeViewJob(
                             windowManager = windowManager,

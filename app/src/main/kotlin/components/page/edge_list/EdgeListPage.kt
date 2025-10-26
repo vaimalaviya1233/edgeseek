@@ -34,13 +34,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
+import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.MobileModel
 import net.lsafer.edgeseek.app.data.settings.EdgePos
-import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 
@@ -91,12 +90,7 @@ fun EdgeListPageContent(modifier: Modifier = Modifier) {
                 MobileModel(Modifier.fillMaxSize())
 
                 for (side in EdgeSide.entries) {
-                    val sideData by remember {
-                        derivedStateOf {
-                            local.repo.edgeSideList.find { it.side == side }
-                                ?: EdgeSideData(side)
-                        }
-                    }
+                    val sideData by remember { derivedStateOf { local.repo[side] } }
 
                     EdgeSideItem(sideData)
 
@@ -157,12 +151,7 @@ private fun BoxScope.EdgeItem(
         }
     }
 
-    val data by remember {
-        derivedStateOf {
-            local.repo.edgePosList.find { it.pos == pos }
-                ?: EdgePosData(pos)
-        }
-    }
+    val data by remember { derivedStateOf { local.repo[pos] } }
 
     val thickness = 24.dp
     val lengthPct = when (sideData.nSegments) {
