@@ -30,16 +30,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.*
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
-import net.lsafer.edgeseek.app.R
 
 @Composable
 context(local: Local)
-fun PresetsPage(
-    route: AppRoute.PresetsPage,
-    modifier: Modifier = Modifier,
-) {
+fun PresetsPage(modifier: Modifier = Modifier) {
     Scaffold(
         Modifier
             .statusBarsPadding()

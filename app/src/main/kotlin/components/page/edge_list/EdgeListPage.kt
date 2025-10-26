@@ -45,10 +45,7 @@ import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 
 @Composable
 context(local: Local, navCtrl: AppNavController)
-fun EdgeListPage(
-    route: AppRoute.EdgeListPage,
-    modifier: Modifier = Modifier,
-) {
+fun EdgeListPage(modifier: Modifier = Modifier) {
     Scaffold(
         Modifier
             .statusBarsPadding()

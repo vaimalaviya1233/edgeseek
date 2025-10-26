@@ -26,7 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.*
+import net.lsafer.edgeseek.app.AppNavController
+import net.lsafer.edgeseek.app.AppRoute
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.android.MainService
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPageContent
@@ -71,6 +73,7 @@ fun IntroductionWizard(
 
     val onComplete: () -> Unit = {
         local.repo.introduced = true
+        @Suppress("ControlFlowWithEmptyBody")
         while (navCtrl.back());
         navCtrl.push(AppRoute.HomePage)
     }
@@ -122,7 +125,7 @@ fun IntroductionWizard(
 
 @Composable
 context(local: Local)
-fun IntroductionWizardWrapper(
+private fun IntroductionWizardWrapper(
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,

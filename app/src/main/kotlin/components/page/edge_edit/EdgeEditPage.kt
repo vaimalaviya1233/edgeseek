@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.*
@@ -39,7 +38,7 @@ import net.lsafer.edgeseek.app.data.settings.OrientationFilter
 @Composable
 context(local: Local)
 fun EdgeEditPage(
-    route: AppRoute.EdgeEditPage,
+    pos: EdgePos,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -51,7 +50,7 @@ fun EdgeEditPage(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        EdgeEditPageContent(route.pos, Modifier.padding(innerPadding))
+        EdgeEditPageContent(pos, Modifier.padding(innerPadding))
     }
 }
 

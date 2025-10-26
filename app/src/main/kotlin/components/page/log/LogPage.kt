@@ -24,15 +24,11 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.AppRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 context(local: Local)
-fun LogPage(
-    route: AppRoute.LogPage,
-    modifier: Modifier = Modifier
-) {
+fun LogPage(modifier: Modifier = Modifier) {
     val logs = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(Unit) {

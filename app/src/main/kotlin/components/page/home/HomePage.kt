@@ -37,10 +37,7 @@ import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 
 @Composable
 context(local: Local, navCtrl: AppNavController)
-fun HomePage(
-    route: AppRoute.HomePage,
-    modifier: Modifier = Modifier,
-) {
+fun HomePage(modifier: Modifier = Modifier) {
     Scaffold(
         Modifier
             .statusBarsPadding()

@@ -18,9 +18,9 @@ package net.lsafer.edgeseek.app.components.window.main
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import net.lsafer.compose.simplenav.SimpleNavHost
-import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
+import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.components.page.about.AboutPage
 import net.lsafer.edgeseek.app.components.page.edge_edit.EdgeEditPage
 import net.lsafer.edgeseek.app.components.page.edge_list.EdgeListPage
@@ -34,27 +34,13 @@ import net.lsafer.edgeseek.app.components.wizard.introduction.IntroductionWizard
 context(local: Local, navCtrl: AppNavController)
 fun MainWindow(modifier: Modifier = Modifier) {
     SimpleNavHost(navCtrl) {
-        entry<AppRoute.HomePage> { route ->
-            HomePage(route, modifier)
-        }
-        entry<AppRoute.EdgeListPage> { route ->
-            EdgeListPage(route, modifier)
-        }
-        entry<AppRoute.EdgeEditPage> { route ->
-            EdgeEditPage(route, modifier)
-        }
-        entry<AppRoute.PermissionsPage> { route ->
-            PermissionsPage(route, modifier)
-        }
-        entry<AppRoute.PresetsPage> { route ->
-            PresetsPage(route, modifier)
-        }
-        entry<AppRoute.AboutPage> { route ->
-            AboutPage(route, modifier)
-        }
-        entry<AppRoute.LogPage> { route ->
-            LogPage(route, modifier)
-        }
+        entry<AppRoute.HomePage> { HomePage(modifier) }
+        entry<AppRoute.EdgeListPage> { EdgeListPage(modifier) }
+        entry<AppRoute.EdgeEditPage> { EdgeEditPage(it.pos, modifier) }
+        entry<AppRoute.PermissionsPage> { PermissionsPage(modifier) }
+        entry<AppRoute.PresetsPage> { PresetsPage(modifier) }
+        entry<AppRoute.AboutPage> { AboutPage(modifier) }
+        entry<AppRoute.LogPage> { LogPage(modifier) }
         entry<AppRoute.IntroductionWizard> { route ->
             IntroductionWizard(route, modifier)
         }
