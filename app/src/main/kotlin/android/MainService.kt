@@ -13,17 +13,19 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package net.lsafer.edgeseek.app
+package net.lsafer.edgeseek.app.android
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.view.WindowManager
 import androidx.compose.runtime.snapshotFlow
 import androidx.core.app.NotificationCompat
@@ -33,22 +35,31 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningReduce
-import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
+import net.lsafer.edgeseek.app.R
+import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
-import net.lsafer.edgeseek.app.receiver.ScreenOffBroadCastReceiver
 
 class MainService : Service() {
+    companion object {
+        fun start(ctx: Context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                ctx.startForegroundService(Intent(ctx, MainService::class.java))
+            else
+                ctx.startService(Intent(ctx, MainService::class.java))
+        }
+    }
+
     private val local = globalLocal
     private var launchedEdgeViewJobsSubJobFlow = MutableSharedFlow<Job>(1)
 
     private val coroutineScope = CoroutineScope(
         CoroutineName("MainServiceScope") + Dispatchers.Default + SupervisorJob() +
                 CoroutineExceptionHandler { _, e ->
-                    moduleLogger.e("Unhandled coroutine exception", e)
+                    Log.e("MainServiceScope", "Unhandled coroutine exception", e)
                 }
     )
 

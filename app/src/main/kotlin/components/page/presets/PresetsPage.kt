@@ -37,7 +37,7 @@ import net.lsafer.edgeseek.app.R
 @Composable
 context(local: Local)
 fun PresetsPage(
-    route: UniRoute.PresetsPage,
+    route: AppRoute.PresetsPage,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(

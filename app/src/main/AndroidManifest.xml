@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
 
     <application
-            android:name=".MainApplication"
+            android:name=".android.MainApplication"
             android:allowBackup="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
@@ -22,7 +22,7 @@
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
     >
         <activity
-                android:name=".MainActivity"
+                android:name=".android.MainActivity"
                 android:screenOrientation="portrait"
                 android:exported="true"
                 android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
@@ -33,10 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".MainService"
+        <service android:name=".android.MainService"
                  android:foregroundServiceType="specialUse"/>
         <service
-                android:name=".MainAccessibilityService"
+                android:name=".android.MainAccessibilityService"
                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
                 android:exported="false">
             <intent-filter>
@@ -46,12 +46,12 @@
                     android:name="android.accessibilityservice"
                     android:resource="@xml/accessibility_service"/>
         </service>
-        <receiver android:name=".receiver.BootCompleteBroadcastReceiver" android:exported="true">
+        <receiver android:name=".android.BootCompleteBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.ScreenOffBroadCastReceiver" android:exported="true">
+        <receiver android:name=".android.ScreenOffBroadCastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SCREEN_OFF"/>
             </intent-filter>

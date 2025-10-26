@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package net.lsafer.edgeseek.app
+package net.lsafer.edgeseek.app.android
 
 import android.os.Build
 import android.os.Bundle
@@ -22,29 +22,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
-import net.lsafer.edgeseek.app.MainApplication.Companion.globalNavCtrl
+import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
+import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalNavCtrl
 import net.lsafer.edgeseek.app.components.window.main.MainWindow
-import net.lsafer.edgeseek.app.components.wrapper.AndroidUniLocaleProvider
-import net.lsafer.edgeseek.app.components.wrapper.AndroidUniWindowCompat
-import net.lsafer.edgeseek.app.components.wrapper.UniTheme
+import net.lsafer.edgeseek.app.components.wrapper.AppLocaleProvider
+import net.lsafer.edgeseek.app.components.wrapper.AppTheme
+import net.lsafer.edgeseek.app.components.wrapper.AppWindowCompat
 
 class MainActivity : ComponentActivity() {
+    private val local = globalLocal
+    private val navCtrl = globalNavCtrl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val local = globalLocal
-        val navCtrl = globalNavCtrl
-
         setContent {
             context(local, navCtrl) {
-                AndroidUniLocaleProvider {
-                    AndroidUniWindowCompat {
-                        UniTheme {
+                AppLocaleProvider {
+                    AppWindowCompat {
+                        AppTheme {
                             Surface(color = MaterialTheme.colorScheme.background) {
                                 MainWindow()
                             }
@@ -57,9 +56,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        globalLocal.ioScope.launch {
-            globalLocal.eventBus.startService.send(Unit)
-        }
+        MainService.start(this)
     }
 }

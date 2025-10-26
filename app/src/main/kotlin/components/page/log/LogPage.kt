@@ -1,5 +1,6 @@
 package net.lsafer.edgeseek.app.components.page.log
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -18,21 +19,44 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.AppRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 context(local: Local)
 fun LogPage(
-    route: UniRoute.LogPage,
+    route: AppRoute.LogPage,
     modifier: Modifier = Modifier
 ) {
     val logs = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(Unit) {
-        local.fullLog.collect { logs += it }
+        withContext(Dispatchers.IO) {
+            val p = Runtime.getRuntime().exec("logcat")
+
+            try {
+                p.inputStream
+                    .bufferedReader()
+                    .lineSequence()
+                    .forEach {
+                        logs += it
+                        yield()
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    p.destroyForcibly()
+                } else {
+                    p.destroy()
+                }
+            }
+        }
     }
 
     Scaffold(

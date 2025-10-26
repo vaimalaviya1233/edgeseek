@@ -112,8 +112,6 @@ dependencies {
 
     // ##### Community Dependencies #####
 
-    implementation(libs.touchlab.kermit)
-
     implementation(libs.godaddy.colorpickerCompose)
 
     // ##### ANDROID Dependencies #####

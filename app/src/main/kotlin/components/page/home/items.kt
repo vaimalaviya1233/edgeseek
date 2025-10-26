@@ -1,29 +1,24 @@
 package net.lsafer.edgeseek.app.components.page.home
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.*
+import net.lsafer.edgeseek.app.android.MainService
 import net.lsafer.edgeseek.app.components.lib.SingleSelectPreferenceListItem
 import net.lsafer.edgeseek.app.components.lib.SwitchPreferenceListItem
 
 @Composable
 context(local: Local)
 fun HomePage_ListItem_activation(modifier: Modifier = Modifier) {
-    val coroutineScope = rememberCoroutineScope()
+    val ctx = LocalContext.current
 
     SwitchPreferenceListItem(
         value = local.repo.activated,
         onChange = { newValue ->
             local.repo.activated = newValue
-
-            if (newValue) {
-                coroutineScope.launch {
-                    local.eventBus.startService.send(Unit)
-                }
-            }
+            if (newValue) MainService.start(ctx)
         },
         headline = stringResource(R.string.app_activation_headline),
         supporting = stringResource(R.string.app_activation_supporting),

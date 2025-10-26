@@ -1,13 +1,13 @@
 package net.lsafer.edgeseek.app.impl
 
 import android.content.Context
-import co.touchlab.kermit.Logger
+import android.util.Log
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.ActionFeature
 
 sealed class ActionFeatureImpl {
     companion object {
-        private val logger = Logger.withTag(ActionFeatureImpl::class.qualifiedName!!)
+        private val TAG = ActionFeatureImpl::class.simpleName!!
 
         fun from(feature: ActionFeature): ActionFeatureImpl? {
             return when (feature) {
@@ -29,7 +29,7 @@ sealed class ActionFeatureImpl {
                     .getMethod("expandNotificationsPanel")
                     .invoke(ctx.getSystemService("statusbar"))
             } catch (e: ReflectiveOperationException) {
-                logger.e("Couldn't expand status bar", e)
+                Log.e(TAG, "Couldn't expand status bar", e)
             }
         }
     }

@@ -26,21 +26,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.*
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.UniNavController
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.android.MainService
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPageContent
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun IntroductionWizard(
-    route: UniRoute.IntroductionWizard,
+    route: AppRoute.IntroductionWizard,
     modifier: Modifier = Modifier,
 ) {
     val ctx = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val steps = UniRoute.IntroductionWizard.Step.entries
+    val steps = AppRoute.IntroductionWizard.Step.entries
 
     val onStepCancel: () -> Unit = {
         navCtrl.back()
@@ -65,9 +64,7 @@ fun IntroductionWizard(
             }
         } else {
             local.repo.activated = true
-            coroutineScope.launch {
-                local.eventBus.startService.send(Unit)
-            }
+            MainService.start(ctx)
             onStepConfirm()
         }
     }
@@ -75,11 +72,11 @@ fun IntroductionWizard(
     val onComplete: () -> Unit = {
         local.repo.introduced = true
         while (navCtrl.back());
-        navCtrl.push(UniRoute.HomePage)
+        navCtrl.push(AppRoute.HomePage)
     }
 
     when (route.step) {
-        UniRoute.IntroductionWizard.Step.Welcome -> {
+        AppRoute.IntroductionWizard.Step.Welcome -> {
             IntroductionWizardWrapper(
                 onConfirm = onStepConfirm,
                 onCancel = onStepCancel,
@@ -91,7 +88,7 @@ fun IntroductionWizard(
             }
         }
 
-        UniRoute.IntroductionWizard.Step.Permissions ->
+        AppRoute.IntroductionWizard.Step.Permissions ->
             IntroductionWizardWrapper(
                 onConfirm = onPermissionsStepConfirm,
                 onCancel = onStepCancel,
@@ -101,7 +98,7 @@ fun IntroductionWizard(
                 }
             )
 
-        UniRoute.IntroductionWizard.Step.Presets ->
+        AppRoute.IntroductionWizard.Step.Presets ->
             IntroductionWizardWrapper(
                 onConfirm = onStepConfirm,
                 onCancel = onStepCancel,
@@ -109,7 +106,7 @@ fun IntroductionWizard(
                 content = { PresetsPageContent() }
             )
 
-        UniRoute.IntroductionWizard.Step.Done -> {
+        AppRoute.IntroductionWizard.Step.Done -> {
             IntroductionWizardWrapper(
                 onConfirm = onComplete,
                 onCancel = onStepCancel,
@@ -140,7 +137,11 @@ fun IntroductionWizardWrapper(
             SnackbarHost(local.snackbar)
         },
     ) { innerPadding ->
-        Column(Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             Box(
                 Modifier
                     .fillMaxSize()

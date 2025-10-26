@@ -17,15 +17,15 @@ import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import org.cufy.json.*
+import java.io.File
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(FlowPreview::class)
 class MainRepository(
-    initial: JsonObject,
-    private val onFlush: (JsonObject) -> Unit,
-    private val coroutineScope: CoroutineScope,
+    private val file: File,
+    coroutineScope: CoroutineScope
 ) {
     private companion object {
         const val PK_FLAG_ACTIVATED = "f.activated"
@@ -39,9 +39,9 @@ class MainRepository(
     }
 
     private val data = mutableStateMapOf<String, JsonElement>()
-        .apply { putAll(initial) }
 
     init {
+        load()
         snapshotFlow { data }
             .debounce(1.seconds)
             .onEach { flush() }
@@ -49,8 +49,13 @@ class MainRepository(
             .launchIn(coroutineScope)
     }
 
+    fun load() {
+        data.clear()
+        data += file.tryGetJson()
+    }
+
     fun flush() {
-        onFlush(data.toJsonObject())
+        file.trySetJson(data.toJsonObject())
     }
 
     // ==========[ UI ]
@@ -71,7 +76,7 @@ class MainRepository(
         set = { data[PK_WIZ_INTRO] = it },
     )
 
-    // ==========[ EDGE DATA ]
+    // ==========[ FUN ]
 
     var activated by createCachedProperty(
         get = { data[PK_FLAG_ACTIVATED]?.asBooleanOrNull ?: false },
@@ -126,4 +131,22 @@ private inline fun <T> createCachedProperty(
     private val _cache by derivedStateOf { get() }
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = _cache
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
+}
+
+private fun File.tryGetJson(): JsonObject {
+    return try {
+        readText().decodeJsonOrNull()?.asJsonObjectOrNull ?: JsonObject()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return JsonObject()
+    }
+}
+
+private fun File.trySetJson(value: JsonObject) {
+    try {
+        parentFile?.mkdir()
+        writeText(value.encodeToString())
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

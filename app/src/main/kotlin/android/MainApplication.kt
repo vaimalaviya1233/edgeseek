@@ -13,56 +13,65 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package net.lsafer.edgeseek.app
+package net.lsafer.edgeseek.app.android
 
 import android.app.Application
-import android.content.Intent
-import android.os.Build
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import android.util.Log
+import androidx.compose.material3.SnackbarHostState
+import kotlinx.coroutines.*
+import kotlinx.datetime.TimeZone
 import net.lsafer.compose.simplenav.InMemorySimpleNavController
-import net.lsafer.edgeseek.app.data.options.AndroidVars
-import okio.Path.Companion.toOkioPath
+import net.lsafer.edgeseek.app.AppNavController
+import net.lsafer.edgeseek.app.AppRoute
+import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.support.CustomDimmerFacade
+import net.lsafer.edgeseek.app.support.CustomToastFacade
+import net.lsafer.edgeseek.app.support.MainRepository
+import kotlin.random.Random
+import kotlin.time.Clock
 
 class MainApplication : Application() {
     companion object {
         lateinit var globalLocal: Local
-        lateinit var globalNavCtrl: UniNavController
+        lateinit var globalNavCtrl: AppNavController
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        runBlocking {
-            val vars = AndroidVars(
-                dataDir = filesDir.toOkioPath(),
-                cacheDir = cacheDir.toOkioPath(),
-            )
+        val local = Local()
+        local.clock = Clock.System
+        local.timeZone = TimeZone.currentSystemDefault()
+        local.random = Random.Default
+        local.ioScope = CoroutineScope(
+            CoroutineName("LocalIoScope") + Dispatchers.IO + SupervisorJob() +
+                    CoroutineExceptionHandler { _, e ->
+                        Log.e("LocalIoScope", "Unhandled coroutine exception", e)
+                    }
+        )
+        local.snackbar = SnackbarHostState()
+        local.toast = CustomToastFacade(this)
+        local.dimmer = CustomDimmerFacade(this)
+        local.repo = MainRepository(
+            file = filesDir.resolve("datastore.json"),
+            coroutineScope = local.ioScope,
+        )
 
-            val local = createAndroidLocal(vars)
-            val navCtrl = InMemorySimpleNavController<UniRoute>(
-                entries = when {
-                    !local.repo.introduced ->
-                        listOf(UniRoute.IntroductionWizard())
+        val navCtrl = InMemorySimpleNavController<AppRoute>(
+            entries = when {
+                !local.repo.introduced ->
+                    listOf(AppRoute.IntroductionWizard())
 
-                    else ->
-                        listOf(UniRoute.HomePage)
-                },
-            )
+                else ->
+                    listOf(AppRoute.HomePage)
+            },
+        )
 
-            globalLocal = local
-            globalNavCtrl = navCtrl
-        }
+        globalLocal = local
+        globalNavCtrl = navCtrl
 
-        globalLocal.ioScope.launch {
-            for (it in globalLocal.eventBus.startService) {
-                val context = this@MainApplication
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    startForegroundService(Intent(context, MainService::class.java))
-                else
-                    startService(Intent(context, MainService::class.java))
-            }
-        }
+        Runtime.getRuntime().addShutdownHook(Thread {
+            local.ioScope.cancel()
+        })
     }
 }

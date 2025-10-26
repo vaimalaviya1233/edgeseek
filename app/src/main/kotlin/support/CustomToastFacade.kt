@@ -16,17 +16,17 @@
 
 @file:SuppressLint("StaticFieldLeak")
 
-package net.lsafer.edgeseek.app.impl
+package net.lsafer.edgeseek.app.support
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.getSystemService
-import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 
 class CustomToastFacade(context: Context) {
     companion object {
-        private val logger = Logger.withTag(CustomToastFacade::class.qualifiedName!!)
+        private val TAG = CustomToastFacade::class.simpleName!!
     }
 
     private val windowManager = context.getSystemService<WindowManager>()!!
@@ -75,7 +75,7 @@ class CustomToastFacade(context: Context) {
         CoroutineScope(Dispatchers.Main).launch {
             if (!attached) {
                 runCatching { windowManager.addView(containerView, windowParams) }
-                    .onFailure { e -> logger.e("failed to attach toast to window", e) }
+                    .onFailure { e -> Log.e(TAG, "failed to attach toast to window", e) }
                     .onFailure { return@launch }
                     .onSuccess { attached = true }
             }

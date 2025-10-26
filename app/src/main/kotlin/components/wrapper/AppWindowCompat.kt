@@ -1,6 +1,5 @@
 package net.lsafer.edgeseek.app.components.wrapper
 
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
@@ -19,16 +18,12 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.core.net.toUri
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.*
 
 @Composable
-context(local: Local, app: ComponentActivity, navCtrl: UniNavController)
-fun AndroidUniWindowCompat(content: @Composable () -> Unit) {
+context(local: Local, app: ComponentActivity, navCtrl: AppNavController)
+fun AppWindowCompat(content: @Composable () -> Unit) {
     val ctx = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -50,17 +45,6 @@ fun AndroidUniWindowCompat(content: @Composable () -> Unit) {
     BackHandler {
         if (!navCtrl.back())
             onLeaveRequest()
-    }
-
-    LaunchedEffect(Unit) {
-        local.eventBus.openUrl
-            .consumeAsFlow()
-            .onEach { urlString ->
-                val uri = urlString.toUri()
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                app.startActivity(intent)
-            }
-            .launchIn(this)
     }
 
     LaunchedEffect(uiColors, isSystemDarkTheme) {

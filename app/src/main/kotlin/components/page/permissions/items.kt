@@ -2,27 +2,25 @@ package net.lsafer.edgeseek.app.components.page.permissions
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import net.lsafer.edgeseek.app.MainAccessibilityService
+import net.lsafer.edgeseek.app.android.MainAccessibilityService
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.icons.SettingsIcon
 import net.lsafer.edgeseek.app.components.lib.SwitchPreferenceListItem
-import net.lsafer.edgeseek.app.util.observeAsState
 
 @Composable
 fun PermissionsPage_ListItem_allow_restricted_permissions(modifier: Modifier = Modifier) {
@@ -30,12 +28,12 @@ fun PermissionsPage_ListItem_allow_restricted_permissions(modifier: Modifier = M
 
     val handleOnClick: () -> Unit = {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.data = Uri.parse("package:${context.packageName}")
+        intent.data = "package:${context.packageName}".toUri()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
     val handleOnOpenTutorial: () -> Unit = {
-        val uri = Uri.parse("https://www.youtube.com/watch?v=28TomZ9tztw")
+        val uri = "https://www.youtube.com/watch?v=28TomZ9tztw".toUri()
         val intent = Intent(Intent.ACTION_VIEW, uri)
         context.startActivity(intent)
     }
@@ -74,7 +72,7 @@ fun PermissionsPage_ListItem_display_over_other_apps(modifier: Modifier = Modifi
 
     val handleOnChange = { _: Boolean ->
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-        intent.data = Uri.parse("package:${context.packageName}")
+        intent.data = "package:${context.packageName}".toUri()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
@@ -100,7 +98,7 @@ fun PermissionsPage_ListItem_write_system_settings(modifier: Modifier = Modifier
 
     val handleOnChange = { _: Boolean ->
         val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
-        intent.data = Uri.parse("package:${context.packageName}")
+        intent.data = "package:${context.packageName}".toUri()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
@@ -128,7 +126,7 @@ fun PermissionsPage_ListItem_ignore_battery_optimizations(modifier: Modifier = M
     val handleOnChange = { _: Boolean ->
         @SuppressLint("BatteryLife")
         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-        intent.data = Uri.parse("package:${context.packageName}")
+        intent.data = "package:${context.packageName}".toUri()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
@@ -162,4 +160,23 @@ fun PermissionsPage_ListItem_accessibility_service(modifier: Modifier = Modifier
         supporting = stringResource(R.string.accessibility_service_supporting),
         modifier = modifier,
     )
+}
+
+@Composable
+private fun Lifecycle.observeAsState(): Lifecycle.State {
+    var state by remember { mutableStateOf(this.currentState) }
+
+    DisposableEffect(this) {
+        val observer = LifecycleEventObserver { _, event ->
+            state = event.targetState
+        }
+
+        this@observeAsState.addObserver(observer)
+
+        onDispose {
+            this@observeAsState.removeObserver(observer)
+        }
+    }
+
+    return state
 }

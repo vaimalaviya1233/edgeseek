@@ -30,7 +30,7 @@ import net.lsafer.edgeseek.app.*
 
 @Composable
 context(local: Local)
-fun UniTheme(content: @Composable () -> Unit) {
+fun AppTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = when (local.repo.uiColors) {
             UI_COLORS_BLACK -> BlackColorPalette

@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import net.lsafer.compose.simplenav.SimpleNavHost
 import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.UniNavController
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.AppNavController
+import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.components.page.about.AboutPage
 import net.lsafer.edgeseek.app.components.page.edge_edit.EdgeEditPage
 import net.lsafer.edgeseek.app.components.page.edge_list.EdgeListPage
@@ -31,31 +31,31 @@ import net.lsafer.edgeseek.app.components.page.presets.PresetsPage
 import net.lsafer.edgeseek.app.components.wizard.introduction.IntroductionWizard
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun MainWindow(modifier: Modifier = Modifier) {
     SimpleNavHost(navCtrl) {
-        entry<UniRoute.HomePage> { route ->
+        entry<AppRoute.HomePage> { route ->
             HomePage(route, modifier)
         }
-        entry<UniRoute.EdgeListPage> { route ->
+        entry<AppRoute.EdgeListPage> { route ->
             EdgeListPage(route, modifier)
         }
-        entry<UniRoute.EdgeEditPage> { route ->
+        entry<AppRoute.EdgeEditPage> { route ->
             EdgeEditPage(route, modifier)
         }
-        entry<UniRoute.PermissionsPage> { route ->
+        entry<AppRoute.PermissionsPage> { route ->
             PermissionsPage(route, modifier)
         }
-        entry<UniRoute.PresetsPage> { route ->
+        entry<AppRoute.PresetsPage> { route ->
             PresetsPage(route, modifier)
         }
-        entry<UniRoute.AboutPage> { route ->
+        entry<AppRoute.AboutPage> { route ->
             AboutPage(route, modifier)
         }
-        entry<UniRoute.LogPage> { route ->
+        entry<AppRoute.LogPage> { route ->
             LogPage(route, modifier)
         }
-        entry<UniRoute.IntroductionWizard> { route ->
+        entry<AppRoute.IntroductionWizard> { route ->
             IntroductionWizard(route, modifier)
         }
     }

@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
 import androidx.cardview.widget.CardView
-import co.touchlab.kermit.Logger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -22,7 +22,7 @@ import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-private val logger = Logger.withTag("net.lsafer.edgeseek.app.impl.launchEdgeViewJob")
+private val TAG = "net.lsafer.edgeseek.app.impl.launchEdgeViewJob"
 
 @SuppressLint("RtlHardcoded", "ClickableViewAccessibility")
 context(ctx: Context, local: Local, coroutineScope: CoroutineScope)
@@ -117,13 +117,13 @@ fun launchEdgeViewJob(
 
             runCatching { windowManager.removeView(view) }
             runCatching { windowManager.addView(view, windowParams) }
-                .onFailure { e -> logger.e("failed adding view to window", e) }
+                .onFailure { e -> Log.e(TAG, "failed adding view to window", e) }
         }
         .launchIn(scope = coroutineScope + Dispatchers.Main)
 
     job.invokeOnCompletion { e ->
         if (e !is CancellationException)
-            logger.e("failure while executing job", e)
+            Log.e(TAG, "failure while executing job", e)
 
         coroutineScope.launch(Dispatchers.Main + NonCancellable) {
             runCatching { windowManager.removeView(view) }

@@ -15,6 +15,7 @@
  */
 package net.lsafer.edgeseek.app.components.page.about
 
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,11 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 import net.lsafer.edgeseek.app.*
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.ListDivider
@@ -36,9 +37,9 @@ import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun AboutPage(
-    route: UniRoute.AboutPage,
+    route: AppRoute.AboutPage,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -55,18 +56,20 @@ fun AboutPage(
 }
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(_: Local, navCtrl: AppNavController)
 fun AboutPageContent(modifier: Modifier = Modifier) {
-    val coroutineScope = rememberCoroutineScope()
+    val ctx = LocalContext.current
 
     fun openIntroductionWizard() {
         @Suppress("ControlFlowWithEmptyBody")
         while (navCtrl.back());
-        navCtrl.push(UniRoute.IntroductionWizard())
+        navCtrl.push(AppRoute.IntroductionWizard())
     }
 
-    fun openUrl(url: String) = coroutineScope.launch {
-        local.eventBus.openUrl.send(url)
+    fun openUrl(urlString: String) {
+        val uri = urlString.toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        ctx.startActivity(intent)
     }
 
     Column(
@@ -117,7 +120,7 @@ fun AboutPageContent(modifier: Modifier = Modifier) {
         )
         ListItem(
             modifier = Modifier
-                .clickable { navCtrl.push(UniRoute.LogPage) },
+                .clickable { navCtrl.push(AppRoute.LogPage) },
             headlineContent = { Text(stringResource(R.string.page_log_headline)) },
             supportingContent = { Text(stringResource(R.string.page_log_supporting)) },
         )

@@ -13,41 +13,36 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package net.lsafer.edgeseek.app.receiver
+package net.lsafer.edgeseek.app.android
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import co.touchlab.kermit.Logger
-import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
+import android.util.Log
+import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 
-// Used @JvmOverloads afraid android **might** try instantiating it
-open class ScreenOffBroadCastReceiver @JvmOverloads constructor(
-    private val local: Local? = null,
-) : BroadcastReceiver() {
+class ScreenOffBroadCastReceiver : BroadcastReceiver() {
     companion object {
-        private val logger = Logger.withTag(ScreenOffBroadCastReceiver::class.qualifiedName!!)
+        private val TAG = ScreenOffBroadCastReceiver::class.simpleName!!
     }
+
+    private val local = globalLocal
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_SCREEN_OFF) {
-            globalLocal.ioScope.launch {
-                if (!globalLocal.repo.brightnessReset)
-                    return@launch
+            if (!globalLocal.repo.brightnessReset)
+                return
 
-                try {
-                    Settings.System.putInt(
-                        context.contentResolver,
-                        Settings.System.SCREEN_BRIGHTNESS_MODE,
-                        Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-                    )
-                    local?.dimmer?.update(0)
-                } catch (e: Exception) {
-                    logger.e("Couldn't toggle auto brightness", e)
-                }
+            try {
+                Settings.System.putInt(
+                    context.contentResolver,
+                    Settings.System.SCREEN_BRIGHTNESS_MODE,
+                    Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+                )
+                local.dimmer.update(0)
+            } catch (e: Exception) {
+                Log.e(TAG, "Couldn't toggle auto brightness", e)
             }
         }
     }

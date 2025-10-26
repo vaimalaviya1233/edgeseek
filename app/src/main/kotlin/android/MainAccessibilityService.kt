@@ -1,4 +1,4 @@
-package net.lsafer.edgeseek.app
+package net.lsafer.edgeseek.app.android
 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent

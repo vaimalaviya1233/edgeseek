@@ -1,11 +1,5 @@
 package net.lsafer.edgeseek.app
 
-import co.touchlab.kermit.Logger
-
-/* ============= ------------------ ============= */
-
-internal val moduleLogger = Logger.withTag("net.lsafer.edgeseek.app")
-
 /* ============= ------------------ ============= */
 
 const val UI_COLORS_BLACK = "black"

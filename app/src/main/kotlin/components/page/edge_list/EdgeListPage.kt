@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.UniNavController
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.AppNavController
+import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.components.lib.MobileModel
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
@@ -45,9 +45,9 @@ import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun EdgeListPage(
-    route: UniRoute.EdgeListPage,
+    route: AppRoute.EdgeListPage,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -64,7 +64,7 @@ fun EdgeListPage(
 }
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun EdgeListPageContent(modifier: Modifier = Modifier) {
     Column(modifier) {
         Spacer(Modifier.height(50.dp))
@@ -140,7 +140,7 @@ private fun BoxScope.EdgeSideItem(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 private fun BoxScope.EdgeItem(
     pos: EdgePos,
     sideData: EdgeSideData,
@@ -153,7 +153,7 @@ private fun BoxScope.EdgeItem(
 
     val handleOnClick: () -> Unit = {
         coroutineScope.launch {
-            navCtrl.push(UniRoute.EdgeEditPage(pos))
+            navCtrl.push(AppRoute.EdgeEditPage(pos))
         }
     }
 

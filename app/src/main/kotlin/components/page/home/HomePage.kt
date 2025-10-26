@@ -29,16 +29,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.UniNavController
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.AppNavController
+import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun HomePage(
-    route: UniRoute.HomePage,
+    route: AppRoute.HomePage,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -55,7 +55,7 @@ fun HomePage(
 }
 
 @Composable
-context(local: Local, navCtrl: UniNavController)
+context(local: Local, navCtrl: AppNavController)
 fun MainPageContent(modifier: Modifier = Modifier) {
     Column(
         Modifier
@@ -72,7 +72,7 @@ fun MainPageContent(modifier: Modifier = Modifier) {
         ListSectionTitle(title = stringResource(R.string.job))
         ListItem(
             modifier = Modifier
-                .clickable { navCtrl.push(UniRoute.EdgeListPage) },
+                .clickable { navCtrl.push(AppRoute.EdgeListPage) },
             headlineContent = { Text(stringResource(R.string.page_edge_list_headline)) },
             supportingContent = { Text(stringResource(R.string.page_edge_list_supporting)) },
         )
@@ -83,19 +83,19 @@ fun MainPageContent(modifier: Modifier = Modifier) {
         ListSectionTitle(title = stringResource(R.string.misc))
         ListItem(
             modifier = Modifier
-                .clickable { navCtrl.push(UniRoute.PermissionsPage) },
+                .clickable { navCtrl.push(AppRoute.PermissionsPage) },
             headlineContent = { Text(stringResource(R.string.page_permissions_headline)) },
             supportingContent = { Text(stringResource(R.string.page_permissions_supporting)) },
         )
         ListItem(
             modifier = Modifier
-                .clickable { navCtrl.push(UniRoute.PresetsPage) },
+                .clickable { navCtrl.push(AppRoute.PresetsPage) },
             headlineContent = { Text(stringResource(R.string.page_presets_headline)) },
             supportingContent = { Text(stringResource(R.string.page_presets_supporting)) },
         )
         ListItem(
             modifier = Modifier
-                .clickable { navCtrl.push(UniRoute.AboutPage) },
+                .clickable { navCtrl.push(AppRoute.AboutPage) },
             headlineContent = { Text(stringResource(R.string.page_about_headline)) },
             supportingContent = { Text(stringResource(R.string.page_about_supporting)) },
         )

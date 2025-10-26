@@ -1,16 +1,17 @@
-package net.lsafer.edgeseek.app.impl
+package net.lsafer.edgeseek.app.support
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.getSystemService
-import co.touchlab.kermit.Logger
 
 class CustomDimmerFacade(context: Context) {
     companion object {
-        private val logger = Logger.withTag(CustomDimmerFacade::class.qualifiedName!!)
+        private val TAG = CustomDimmerFacade::class.simpleName!!
     }
 
     private val windowManager = context.getSystemService<WindowManager>()!!
@@ -61,17 +62,17 @@ class CustomDimmerFacade(context: Context) {
                     .onSuccess { attached = false }
             }
         } else {
-            view.setBackgroundColor(android.graphics.Color.argb(255, 0, 0, 0))
+            view.setBackgroundColor(Color.argb(255, 0, 0, 0))
             view.alpha = value / 255f
             windowParams.alpha = value / 255f
 
             if (!attached) {
                 runCatching { windowManager.addView(view, windowParams) }
-                    .onFailure { e -> logger.e("failed to attach dimmer to window", e) }
+                    .onFailure { e -> Log.e(TAG, "failed to attach dimmer to window", e) }
                     .onSuccess { attached = true }
             } else {
                 runCatching { windowManager.updateViewLayout(view, windowParams) }
-                    .onFailure { e -> logger.e("failed to update dimmer window params", e) }
+                    .onFailure { e -> Log.e(TAG, "failed to update dimmer window params", e) }
             }
         }
     }

@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.R
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.components.lib.*
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
@@ -39,7 +39,7 @@ import net.lsafer.edgeseek.app.data.settings.OrientationFilter
 @Composable
 context(local: Local)
 fun EdgeEditPage(
-    route: UniRoute.EdgeEditPage,
+    route: AppRoute.EdgeEditPage,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(

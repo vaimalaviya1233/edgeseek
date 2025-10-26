@@ -18,14 +18,14 @@ package net.lsafer.edgeseek.app.impl
 import android.content.Context
 import android.media.AudioManager
 import android.provider.Settings
+import android.util.Log
 import androidx.core.content.getSystemService
-import co.touchlab.kermit.Logger
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.ControlFeature
 
 sealed class ControlFeatureImpl {
     companion object {
-        private val logger = Logger.withTag(ControlFeatureImpl::class.qualifiedName!!)
+        private val TAG = ControlFeatureImpl::class.simpleName!!
 
         fun from(feature: ControlFeature): ControlFeatureImpl? {
             return when (feature) {
@@ -82,7 +82,7 @@ sealed class ControlFeatureImpl {
                 local.dimmer.update(0)
                 return newSystemValue
             } catch (e: Exception) {
-                logger.e("Couldn't update brightness level", e)
+                Log.e(TAG, "Couldn't update brightness level", e)
                 return fetchValue()
             }
         }
@@ -133,7 +133,7 @@ sealed class ControlFeatureImpl {
                 local.dimmer.update(newDimmerValue)
                 return newSystemValue - newDimmerValue
             } catch (e: Exception) {
-                logger.e("Couldn't update brightness (with dimmer) level", e)
+                Log.e(TAG, "Couldn't update brightness (with dimmer) level", e)
                 return fetchValue()
             }
         }
@@ -175,7 +175,7 @@ sealed class ControlFeatureImpl {
                 )
                 return newSystemValue
             } catch (e: Exception) {
-                logger.e("Couldn't update stream volume of type: $streamType", e)
+                Log.e(TAG, "Couldn't update stream volume of type: $streamType", e)
                 return fetchValue()
             }
         }

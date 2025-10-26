@@ -13,23 +13,22 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package net.lsafer.edgeseek.app.receiver
+package net.lsafer.edgeseek.app.android
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.MainApplication.Companion.globalLocal
+import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 
-open class BootCompleteBroadcastReceiver : BroadcastReceiver() {
+class BootCompleteBroadcastReceiver : BroadcastReceiver() {
+    private val local = globalLocal
+
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            globalLocal.ioScope.launch {
-                if (!globalLocal.repo.autoBoot)
-                    return@launch
+            if (!local.repo.autoBoot)
+                return
 
-                globalLocal.eventBus.startService.send(Unit)
-            }
+            MainService.start(context)
         }
     }
 }
