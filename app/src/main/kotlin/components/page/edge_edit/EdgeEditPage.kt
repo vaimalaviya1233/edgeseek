@@ -23,16 +23,18 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.lib.*
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.OrientationFilter
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(local: Local)
@@ -74,123 +76,123 @@ fun EdgeEditPageContent(
             .then(modifier)
     ) {
         ListHeader(
-            title = strings.stmt.page_edge_edit_heading,
+            title = stringResource(R.string.page_edge_edit_heading),
             summary = pos.key,
         )
 
-        ListSectionTitle(title = strings.label.job)
+        ListSectionTitle(title = stringResource(R.string.job))
         SwitchPreferenceListItem(
             value = data.activated,
             onChange = { newValue -> edit { it.copy(activated = newValue) } },
-            headline = strings.stmt.edge_activation_headline,
-            supporting = strings.stmt.edge_activation_supporting,
+            headline = stringResource(R.string.edge_activation_headline),
+            supporting = stringResource(R.string.edge_activation_supporting),
         )
         ControlFeaturePreferenceListItem(
             value = data.onSeek,
             onChange = { newValue -> edit { data.copy(onSeek = newValue) } },
-            headline = strings.stmt.edge_seek_task_headline,
+            headline = stringResource(R.string.edge_seek_task_headline),
         )
         ActionFeaturePreferenceListItem(
             value = data.onLongClick,
             onChange = { newValue -> edit { data.copy(onLongClick = newValue) } },
-            headline = strings.stmt.edge_long_click_task_headline,
+            headline = stringResource(R.string.edge_long_click_task_headline),
         )
         ActionFeaturePreferenceListItem(
             value = data.onDoubleClick,
             onChange = { newValue -> edit { data.copy(onDoubleClick = newValue) } },
-            headline = strings.stmt.edge_double_click_task_headline,
+            headline = stringResource(R.string.edge_double_click_task_headline),
         )
         if (pos.side != EdgeSide.Top) ActionFeaturePreferenceListItem(
             value = data.onSwipeUp,
             onChange = { newValue -> edit { data.copy(onSwipeUp = newValue) } },
-            headline = strings.stmt.edge_swipe_up_task_headline,
+            headline = stringResource(R.string.edge_swipe_up_task_headline),
         )
         if (pos.side != EdgeSide.Bottom) ActionFeaturePreferenceListItem(
             value = data.onSwipeDown,
             onChange = { newValue -> edit { data.copy(onSwipeDown = newValue) } },
-            headline = strings.stmt.edge_swipe_down_task_headline,
+            headline = stringResource(R.string.edge_swipe_down_task_headline),
         )
         if (pos.side != EdgeSide.Left) ActionFeaturePreferenceListItem(
             value = data.onSwipeLeft,
             onChange = { newValue -> edit { data.copy(onSwipeLeft = newValue) } },
-            headline = strings.stmt.edge_swipe_left_task_headline,
+            headline = stringResource(R.string.edge_swipe_left_task_headline),
         )
         if (pos.side != EdgeSide.Right) ActionFeaturePreferenceListItem(
             value = data.onSwipeRight,
             onChange = { newValue -> edit { data.copy(onSwipeRight = newValue) } },
-            headline = strings.stmt.edge_swipe_right_task_headline,
+            headline = stringResource(R.string.edge_swipe_right_task_headline),
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.input)
+        ListSectionTitle(title = stringResource(R.string.input))
         SliderPreferenceListItem(
             value = data.sensitivity,
             onChange = { newValue -> edit { data.copy(sensitivity = newValue) } },
-            headline = strings.stmt.edge_sensitivity_headline,
-            supporting = strings.stmt.edge_sensitivity_supporting,
+            headline = stringResource(R.string.edge_sensitivity_headline),
+            supporting = stringResource(R.string.edge_sensitivity_supporting),
             valueRange = 5..100,
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.dimensions)
+        ListSectionTitle(title = stringResource(R.string.dimensions))
         SliderPreferenceListItem(
             value = data.thickness,
             onChange = { newValue -> edit { data.copy(thickness = newValue) } },
-            headline = strings.stmt.edge_thickness_headline,
-            supporting = strings.stmt.edge_thickness_supporting,
+            headline = stringResource(R.string.edge_thickness_headline),
+            supporting = stringResource(R.string.edge_thickness_supporting),
             valueRange = 0..100,
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.appearance)
+        ListSectionTitle(title = stringResource(R.string.appearance))
         ColorPreferenceListItem(
             value = data.color,
             onChange = { newValue -> edit { data.copy(color = newValue) } },
-            headline = strings.stmt.edge_color_headline,
-            supporting = strings.stmt.edge_color_supporting,
+            headline = stringResource(R.string.edge_color_headline),
+            supporting = stringResource(R.string.edge_color_supporting),
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.misc)
+        ListSectionTitle(title = stringResource(R.string.misc))
         SwitchPreferenceListItem(
             value = data.seekSteps,
             onChange = { newValue -> edit { data.copy(seekSteps = newValue) } },
-            headline = strings.stmt.edge_seek_steps_headline,
-            supporting = strings.stmt.edge_seek_steps_supporting,
+            headline = stringResource(R.string.edge_seek_steps_headline),
+            supporting = stringResource(R.string.edge_seek_steps_supporting),
         )
         SwitchPreferenceListItem(
             value = data.seekAcceleration,
             onChange = { newValue -> edit { data.copy(seekAcceleration = newValue) } },
-            headline = strings.stmt.edge_seek_acceleration_headline,
-            supporting = strings.stmt.edge_seek_acceleration_supporting,
+            headline = stringResource(R.string.edge_seek_acceleration_headline),
+            supporting = stringResource(R.string.edge_seek_acceleration_supporting),
         )
         SwitchPreferenceListItem(
             value = data.feedbackToast,
             onChange = { newValue -> edit { data.copy(feedbackToast = newValue) } },
-            headline = strings.stmt.edge_feedback_toast_headline,
-            supporting = strings.stmt.edge_feedback_toast_supporting,
+            headline = stringResource(R.string.edge_feedback_toast_headline),
+            supporting = stringResource(R.string.edge_feedback_toast_supporting),
         )
         SwitchPreferenceListItem(
             value = data.feedbackSystemPanel,
             onChange = { newValue -> edit { data.copy(feedbackSystemPanel = newValue) } },
-            headline = strings.stmt.edge_feedback_system_panel_headline,
-            supporting = strings.stmt.edge_feedback_system_panel_supporting,
+            headline = stringResource(R.string.edge_feedback_system_panel_headline),
+            supporting = stringResource(R.string.edge_feedback_system_panel_supporting),
         )
         SingleSelectPreferenceListItem(
             value = data.orientationFilter,
             onChange = { newValue -> edit { it.copy(orientationFilter = newValue) } },
-            headline = strings.stmt.edge_orientation_filter_headline,
+            headline = stringResource(R.string.edge_orientation_filter_headline),
             items = mapOf(
-                OrientationFilter.All to strings.stmt.edge_orientation_filter_value_all,
-                OrientationFilter.PortraitOnly to strings.stmt.edge_orientation_filter_value_portrait_only,
-                OrientationFilter.LandscapeOnly to strings.stmt.edge_orientation_filter_value_landscape_only,
+                OrientationFilter.All to stringResource(R.string.edge_orientation_filter_value_all),
+                OrientationFilter.PortraitOnly to stringResource(R.string.edge_orientation_filter_value_portrait_only),
+                OrientationFilter.LandscapeOnly to stringResource(R.string.edge_orientation_filter_value_landscape_only),
             )
         )
         SliderPreferenceListItem(
             value = data.feedbackVibration,
             onChange = { newValue -> edit { data.copy(feedbackVibration = newValue) } },
-            headline = strings.stmt.edge_feedback_vibration_headline,
-            supporting = strings.stmt.edge_feedback_vibration_supporting,
+            headline = stringResource(R.string.edge_feedback_vibration_headline),
+            supporting = stringResource(R.string.edge_feedback_vibration_supporting),
             valueRange = 0..100,
         )
 

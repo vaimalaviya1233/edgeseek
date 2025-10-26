@@ -29,11 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.lib.MobileModel
@@ -41,7 +43,6 @@ import net.lsafer.edgeseek.app.data.settings.EdgePos
 import net.lsafer.edgeseek.app.data.settings.EdgePosData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import net.lsafer.edgeseek.app.data.settings.EdgeSideData
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(local: Local, navCtrl: UniNavController)
@@ -69,13 +70,13 @@ fun EdgeListPageContent(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(50.dp))
 
         Text(
-            text = strings.stmt.page_edge_list_heading,
+            text = stringResource(R.string.page_edge_list_heading),
             color = MaterialTheme.colorScheme.secondary,
             fontSize = 30.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
         )
         Text(
-            text = strings.stmt.page_edge_list_summary,
+            text = stringResource(R.string.page_edge_list_summary),
             fontSize = 15.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(.5f),
             modifier = Modifier.align(Alignment.CenterHorizontally),

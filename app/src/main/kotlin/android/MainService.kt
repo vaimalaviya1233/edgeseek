@@ -175,17 +175,16 @@ class MainService : Service() {
 
     private fun startForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val strings = local.infoStore.strings
-            val title = strings.stmt.foreground_noti_title
-            val description = strings.stmt.foreground_noti_text
+            val title = getString(R.string.foreground_noti_title)
+            val description = getString(R.string.foreground_noti_text)
 
             val channel = NotificationChannel("main", title, NotificationManager.IMPORTANCE_MIN)
             channel.description = description
             this.getSystemService(NotificationManager::class.java)
                 .createNotificationChannel(channel)
             val notification = NotificationCompat.Builder(this, channel.id)
-                .setContentTitle(strings.stmt.foreground_noti_title)
-                .setContentText(strings.stmt.foreground_noti_text)
+                .setContentTitle(getString(R.string.foreground_noti_title))
+                .setContentText(getString(R.string.foreground_noti_text))
                 .setSmallIcon(R.drawable.ic_sync)
                 .build()
             this.startForeground(1, notification)

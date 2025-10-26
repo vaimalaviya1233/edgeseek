@@ -2,10 +2,11 @@ package net.lsafer.edgeseek.app.components.page.edge_edit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.SingleSelectPreferenceListItem
 import net.lsafer.edgeseek.app.data.settings.ActionFeature
 import net.lsafer.edgeseek.app.data.settings.ControlFeature
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 fun ControlFeaturePreferenceListItem(
@@ -19,13 +20,13 @@ fun ControlFeaturePreferenceListItem(
         onChange = onChange,
         headline = headline,
         items = mapOf(
-            ControlFeature.Nothing to strings.stmt.control_feature_nothing,
-            ControlFeature.Brightness to strings.stmt.control_feature_brightness,
-            ControlFeature.BrightnessWithDimmer to strings.stmt.control_feature_brightness_dimmer,
-            ControlFeature.Alarm to strings.stmt.control_feature_alarm,
-            ControlFeature.Music to strings.stmt.control_feature_music,
-            ControlFeature.Ring to strings.stmt.control_feature_ring,
-            ControlFeature.System to strings.stmt.control_feature_system,
+            ControlFeature.Nothing to stringResource(R.string.control_feature_nothing),
+            ControlFeature.Brightness to stringResource(R.string.control_feature_brightness),
+            ControlFeature.BrightnessWithDimmer to stringResource(R.string.control_feature_brightness_dimmer),
+            ControlFeature.Alarm to stringResource(R.string.control_feature_alarm),
+            ControlFeature.Music to stringResource(R.string.control_feature_music),
+            ControlFeature.Ring to stringResource(R.string.control_feature_ring),
+            ControlFeature.System to stringResource(R.string.control_feature_system),
         ),
         modifier = modifier,
     )
@@ -43,8 +44,8 @@ fun ActionFeaturePreferenceListItem(
         onChange = onChange,
         headline = headline,
         items = mapOf(
-            ActionFeature.Nothing to strings.stmt.action_feature_nothing,
-            ActionFeature.ExpandStatusBar to strings.stmt.action_feature_expand_status_bar,
+            ActionFeature.Nothing to stringResource(R.string.action_feature_nothing),
+            ActionFeature.ExpandStatusBar to stringResource(R.string.action_feature_expand_status_bar),
         ),
         modifier = modifier,
     )

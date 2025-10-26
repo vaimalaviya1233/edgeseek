@@ -14,12 +14,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.UniRoute
-import net.lsafer.edgeseek.app.l10n.strings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +45,7 @@ fun LogPage(
         },
         topBar = {
             TopAppBar(
-                title = { Text(strings.stmt.page_log_heading) }
+                title = { Text(stringResource(R.string.page_log_heading)) }
             )
         }
     ) { innerPadding ->

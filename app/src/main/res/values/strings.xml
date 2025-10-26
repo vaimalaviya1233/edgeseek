@@ -2,7 +2,7 @@
     <string name="app_name">Edge Seek</string>
 
     <string name="accessibility_service_description">
-        The application uses the accessibility service for black-listing applications.
+        The application uses the accessibility service for blacklisting applications.
 
         Additionally, some Oppo/OnePlus devices require this permission for Controlling audio in the background.
     </string>

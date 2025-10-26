@@ -7,12 +7,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(_: Local)
@@ -22,8 +23,8 @@ fun PermissionsPageContent(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState())
             .then(modifier)
     ) {
-        ListHeader(title = strings.stmt.page_permissions_heading)
-        ListSectionTitle(title = strings.label.mandatory)
+        ListHeader(title = stringResource(R.string.page_permissions_heading))
+        ListSectionTitle(title = stringResource(R.string.mandatory))
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             PermissionsPage_ListItem_allow_restricted_permissions()
@@ -33,7 +34,7 @@ fun PermissionsPageContent(modifier: Modifier = Modifier) {
         PermissionsPage_ListItem_write_system_settings()
 
         ListDivider()
-        ListSectionTitle(title = strings.label.additional)
+        ListSectionTitle(title = stringResource(R.string.additional))
         PermissionsPage_ListItem_ignore_battery_optimizations()
         PermissionsPage_ListItem_accessibility_service()
 

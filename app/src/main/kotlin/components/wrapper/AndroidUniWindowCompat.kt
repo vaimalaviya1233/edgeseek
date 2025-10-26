@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.net.toUri
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -24,12 +25,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.*
-import net.lsafer.edgeseek.app.l10n.LocalStrings
 
 @Composable
 context(local: Local, app: ComponentActivity, navCtrl: UniNavController)
 fun AndroidUniWindowCompat(content: @Composable () -> Unit) {
-    val strings = LocalStrings.current
+    val ctx = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val isSystemDarkTheme = isSystemInDarkTheme()
@@ -37,8 +37,8 @@ fun AndroidUniWindowCompat(content: @Composable () -> Unit) {
 
     fun onLeaveRequest() = coroutineScope.launch {
         val result = local.snackbar.showSnackbar(
-            message = strings.stmt.exit_application_qm,
-            actionLabel = strings.label.yes,
+            message = ctx.getString(R.string.exit_application_qm),
+            actionLabel = ctx.getString(R.string.yes),
             withDismissAction = true,
             duration = SnackbarDuration.Short,
         )

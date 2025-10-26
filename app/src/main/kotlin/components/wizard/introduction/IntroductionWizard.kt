@@ -23,14 +23,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPageContent
-import net.lsafer.edgeseek.app.l10n.LocalStrings
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(local: Local, navCtrl: UniNavController)
@@ -38,8 +38,7 @@ fun IntroductionWizard(
     route: UniRoute.IntroductionWizard,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val strings = LocalStrings.current
+    val ctx = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val steps = UniRoute.IntroductionWizard.Step.entries
 
@@ -56,12 +55,12 @@ fun IntroductionWizard(
 
     val onPermissionsStepConfirm: () -> Unit = {
         if (
-            !Settings.canDrawOverlays(context) ||
-            !Settings.System.canWrite(context)
+            !Settings.canDrawOverlays(ctx) ||
+            !Settings.System.canWrite(ctx)
         ) {
             coroutineScope.launch {
                 local.snackbar.showSnackbar(
-                    strings.stmt.mandatory_permissions_not_met,
+                    ctx.getString(R.string.mandatory_permissions_not_met)
                 )
             }
         } else {
@@ -87,7 +86,7 @@ fun IntroductionWizard(
                 modifier = modifier,
             ) {
                 Box(Modifier.fillMaxSize(), Alignment.Center) {
-                    Text(strings.stmt.welcome_phrase)
+                    Text(stringResource(R.string.welcome_phrase))
                 }
             }
         }
@@ -117,7 +116,7 @@ fun IntroductionWizard(
                 modifier = modifier,
             ) {
                 Box(Modifier.fillMaxSize(), Alignment.Center) {
-                    Text(strings.stmt.all_setup_phrase)
+                    Text(stringResource(R.string.all_setup_phrase))
                 }
             }
         }
@@ -140,8 +139,8 @@ fun IntroductionWizardWrapper(
         snackbarHost = {
             SnackbarHost(local.snackbar)
         },
-    ) {
-        Column(Modifier.fillMaxSize()) {
+    ) { innerPadding ->
+        Column(Modifier.fillMaxSize().padding(innerPadding)) {
             Box(
                 Modifier
                     .fillMaxSize()
@@ -153,7 +152,7 @@ fun IntroductionWizardWrapper(
             Surface(Modifier.fillMaxWidth()) {
                 Row(Modifier.padding(vertical = 5.dp, horizontal = 75.dp)) {
                     TextButton(onClick = { onCancel() }) {
-                        Text(strings.label.back)
+                        Text(stringResource(R.string.back))
                     }
                     Spacer(
                         Modifier
@@ -161,7 +160,7 @@ fun IntroductionWizardWrapper(
                             .weight(1f)
                     )
                     TextButton({ onConfirm() }) {
-                        Text(strings.label.next, color = MaterialTheme.colorScheme.secondary)
+                        Text(stringResource(R.string.next), color = MaterialTheme.colorScheme.secondary)
                     }
                 }
             }

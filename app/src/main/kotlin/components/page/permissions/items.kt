@@ -17,11 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import net.lsafer.edgeseek.app.MainAccessibilityService
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.SwitchPreferenceListItem
-import net.lsafer.edgeseek.app.l10n.strings
 import net.lsafer.edgeseek.app.util.observeAsState
 
 @Composable
@@ -44,18 +45,18 @@ fun PermissionsPage_ListItem_allow_restricted_permissions(modifier: Modifier = M
         modifier = Modifier
             .clickable(onClick = handleOnClick)
             .then(modifier),
-        headlineContent = { Text(strings.stmt.restricted_permissions_headline) },
+        headlineContent = { Text(stringResource(R.string.restricted_permissions_headline)) },
         trailingContent = {
             IconButton(handleOnClick) {
-                Icon(Icons.Default.Settings, strings.stmt.open_settings)
+                Icon(Icons.Default.Settings, stringResource(R.string.open_settings))
             }
         },
         supportingContent = {
             Column {
-                Text(strings.stmt.restricted_permissions_supporting)
+                Text(stringResource(R.string.restricted_permissions_supporting))
 
                 OutlinedButton(handleOnOpenTutorial, Modifier.padding(8.dp)) {
-                    Text(strings.stmt.watch_tutorial)
+                    Text(stringResource(R.string.watch_tutorial))
                 }
             }
         }
@@ -82,8 +83,8 @@ fun PermissionsPage_ListItem_display_over_other_apps(modifier: Modifier = Modifi
     SwitchPreferenceListItem(
         value = isChecked,
         onChange = handleOnChange,
-        headline = strings.stmt.display_over_other_apps_headline,
-        supporting = strings.stmt.display_over_other_apps_supporting,
+        headline = stringResource(R.string.display_over_other_apps_headline),
+        supporting = stringResource(R.string.display_over_other_apps_supporting),
         modifier = modifier,
     )
 }
@@ -108,8 +109,8 @@ fun PermissionsPage_ListItem_write_system_settings(modifier: Modifier = Modifier
     SwitchPreferenceListItem(
         value = isChecked,
         onChange = handleOnChange,
-        headline = strings.stmt.write_system_settings_headline,
-        supporting = strings.stmt.write_system_settings_supporting,
+        headline = stringResource(R.string.write_system_settings_headline),
+        supporting = stringResource(R.string.write_system_settings_supporting),
         modifier = modifier,
     )
 }
@@ -136,8 +137,8 @@ fun PermissionsPage_ListItem_ignore_battery_optimizations(modifier: Modifier = M
     SwitchPreferenceListItem(
         value = isChecked,
         onChange = handleOnChange,
-        headline = strings.stmt.ignore_battery_optimizations_headline,
-        supporting = strings.stmt.ignore_battery_optimizations_supporting,
+        headline = stringResource(R.string.ignore_battery_optimizations_headline),
+        supporting = stringResource(R.string.ignore_battery_optimizations_supporting),
         modifier = modifier,
     )
 }
@@ -158,8 +159,8 @@ fun PermissionsPage_ListItem_accessibility_service(modifier: Modifier = Modifier
     SwitchPreferenceListItem(
         value = isChecked,
         onChange = handleOnChange,
-        headline = strings.stmt.accessibility_service_headline,
-        supporting = strings.stmt.accessibility_service_supporting,
+        headline = stringResource(R.string.accessibility_service_headline),
+        supporting = stringResource(R.string.accessibility_service_supporting),
         modifier = modifier,
     )
 }

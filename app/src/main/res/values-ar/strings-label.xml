@@ -1,0 +1,24 @@
+<resources>
+    <string name="additional">إضافي</string>
+    <string name="appearance">المظهر</string>
+    <string name="application">التطبيق</string>
+    <string name="author">المبرمج</string>
+    <string name="back">رجوع</string>
+    <string name="cancel">إلغاء</string>
+    <string name="clear_log">مسح السجل</string>
+    <string name="confirm">تأكيد</string>
+    <string name="credits">الحقوق</string>
+    <string name="dimensions">الأبعاد</string>
+    <string name="input">المدخلات</string>
+    <string name="job">الوظيفة</string>
+    <string name="links">روابط</string>
+    <string name="mandatory">ضروري</string>
+    <string name="misc">أخرى</string>
+    <string name="next">التالي</string>
+    <string name="presets">النماذج</string>
+    <string name="utility">أدوات</string>
+    <string name="version">النسخة</string>
+    <string name="version_code">رقم النسخة</string>
+    <string name="version_name">إسم النسخة</string>
+    <string name="yes">نعم</string>
+</resources>

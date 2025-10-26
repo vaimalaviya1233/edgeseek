@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.TimeZone
 import net.lsafer.edgeseek.app.support.EventBus
-import net.lsafer.edgeseek.app.support.InfoStore
 import net.lsafer.edgeseek.app.support.MainRepository
 import kotlin.random.Random
 import kotlin.time.Clock
@@ -22,5 +21,4 @@ class Local {
     lateinit var repo: MainRepository
 
     val eventBus = EventBus()
-    val infoStore = InfoStore()
 }

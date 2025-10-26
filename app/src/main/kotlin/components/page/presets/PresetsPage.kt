@@ -27,11 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.*
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
-import net.lsafer.edgeseek.app.l10n.strings
+import net.lsafer.edgeseek.app.R
 
 @Composable
 context(local: Local)
@@ -61,68 +62,68 @@ fun PresetsPageContent(modifier: Modifier = Modifier) {
             .then(modifier),
     ) {
         ListHeader(
-            title = strings.stmt.page_presets_heading,
-            summary = strings.stmt.page_presets_summary,
+            title = stringResource(R.string.page_presets_heading),
+            summary = stringResource(R.string.page_presets_summary),
         )
-        ListSectionTitle(title = strings.label.presets)
+        ListSectionTitle(title = stringResource(R.string.presets))
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_STANDARD
                 local.repo.edgeSideList = PRESET_SIDE_STANDARD
             },
-            headlineContent = { Text(strings.stmt.preset_standard_headline) },
-            supportingContent = { Text(strings.stmt.preset_standard_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_standard_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_standard_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_STANDARD
                 local.repo.edgeSideList = PRESET_SIDE_CENTERED
             },
-            headlineContent = { Text(strings.stmt.preset_standard_c_headline) },
-            supportingContent = { Text(strings.stmt.preset_standard_c_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_standard_c_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_standard_c_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_BRIGHTNESS_ONLY
                 local.repo.edgeSideList = PRESET_SIDE_STANDARD
             },
-            headlineContent = { Text(strings.stmt.preset_brightness_headline) },
-            supportingContent = { Text(strings.stmt.preset_brightness_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_brightness_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_brightness_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_BRIGHTNESS_ONLY
                 local.repo.edgeSideList = PRESET_SIDE_CENTERED
             },
-            headlineContent = { Text(strings.stmt.preset_brightness_c_headline) },
-            supportingContent = { Text(strings.stmt.preset_brightness_c_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_brightness_c_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_brightness_c_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_DOUBLE_BRIGHTNESS
                 local.repo.edgeSideList = PRESET_SIDE_STANDARD
             },
-            headlineContent = { Text(strings.stmt.preset_brightness_d_headline) },
-            supportingContent = { Text(strings.stmt.preset_brightness_d_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_brightness_d_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_brightness_d_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = PRESET_POS_DOUBLE_BRIGHTNESS
                 local.repo.edgeSideList = PRESET_SIDE_CENTERED
             },
-            headlineContent = { Text(strings.stmt.preset_brightness_dc_headline) },
-            supportingContent = { Text(strings.stmt.preset_brightness_dc_supporting) }
+            headlineContent = { Text(stringResource(R.string.preset_brightness_dc_headline)) },
+            supportingContent = { Text(stringResource(R.string.preset_brightness_dc_supporting)) }
         )
 
-        ListSectionTitle(title = strings.label.utility)
+        ListSectionTitle(title = stringResource(R.string.utility))
         ListItem(
             modifier = Modifier.clickable {
                 local.repo.edgePosList = local.repo.edgePosList.map {
                     it.copy(color = Color(it.color).copy(alpha = 1f).toArgb())
                 }
             },
-            headlineContent = { Text(strings.stmt.show_all_headline) },
-            supportingContent = { Text(strings.stmt.show_all_supporting) }
+            headlineContent = { Text(stringResource(R.string.show_all_headline)) },
+            supportingContent = { Text(stringResource(R.string.show_all_supporting)) }
         )
         ListItem(
             modifier = Modifier.clickable {
@@ -130,8 +131,8 @@ fun PresetsPageContent(modifier: Modifier = Modifier) {
                     it.copy(color = Color(it.color).copy(alpha = .01f).toArgb())
                 }
             },
-            headlineContent = { Text(strings.stmt.hide_all_headline) },
-            supportingContent = { Text(strings.stmt.hide_all_supporting) }
+            headlineContent = { Text(stringResource(R.string.hide_all_headline)) },
+            supportingContent = { Text(stringResource(R.string.hide_all_supporting)) }
         )
 
         Spacer(Modifier.height(50.dp))

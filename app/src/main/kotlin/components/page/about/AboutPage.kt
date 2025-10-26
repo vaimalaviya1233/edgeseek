@@ -26,16 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import net.lsafer.edgeseek.app.BuildConfig
-import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.UniNavController
-import net.lsafer.edgeseek.app.UniRoute
+import net.lsafer.edgeseek.app.*
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(local: Local, navCtrl: UniNavController)
@@ -76,52 +74,52 @@ fun AboutPageContent(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState())
             .then(modifier)
     ) {
-        ListHeader(title = strings.stmt.page_about_heading)
-        ListSectionTitle(title = strings.label.credits)
+        ListHeader(title = stringResource(R.string.page_about_heading))
+        ListSectionTitle(title = stringResource(R.string.credits))
         ListItem(
-            headlineContent = { Text(strings.label.author) },
+            headlineContent = { Text(stringResource(R.string.author)) },
             supportingContent = { Text("LSafer") }
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.version)
+        ListSectionTitle(title = stringResource(R.string.version))
         ListItem(
-            headlineContent = { Text(strings.label.version_name) },
+            headlineContent = { Text(stringResource(R.string.version_name)) },
             supportingContent = { Text(BuildConfig.VERSION) },
         )
         ListItem(
-            headlineContent = { Text(strings.label.version_code) },
+            headlineContent = { Text(stringResource(R.string.version_code)) },
             supportingContent = { Text(BuildConfig.VERSION_CODE.toString()) },
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.links)
+        ListSectionTitle(title = stringResource(R.string.links))
         ListItem(
             modifier = Modifier
                 .clickable { openUrl("https://lsafer.net/edgeseek") },
-            headlineContent = { Text(strings.stmt.about_website_headline) },
-            supportingContent = { Text(strings.stmt.about_website_supporting) },
+            headlineContent = { Text(stringResource(R.string.about_website_headline)) },
+            supportingContent = { Text(stringResource(R.string.about_website_supporting)) },
         )
         ListItem(
             modifier = Modifier
                 .clickable { openUrl("https://github.com/lsafer/edgeseek") },
-            headlineContent = { Text(strings.stmt.about_source_code_headline) },
-            supportingContent = { Text(strings.stmt.about_source_code_supporting) }
+            headlineContent = { Text(stringResource(R.string.about_source_code_headline)) },
+            supportingContent = { Text(stringResource(R.string.about_source_code_supporting)) }
         )
 
         ListDivider()
-        ListSectionTitle(title = strings.label.misc)
+        ListSectionTitle(title = stringResource(R.string.misc))
         ListItem(
             modifier = Modifier
                 .clickable { openIntroductionWizard() },
-            headlineContent = { Text(strings.stmt.about_reintroduce_headline) },
-            supportingContent = { Text(strings.stmt.about_reintroduce_supporting) },
+            headlineContent = { Text(stringResource(R.string.about_reintroduce_headline)) },
+            supportingContent = { Text(stringResource(R.string.about_reintroduce_supporting)) },
         )
         ListItem(
             modifier = Modifier
                 .clickable { navCtrl.push(UniRoute.LogPage) },
-            headlineContent = { Text(strings.stmt.page_log_headline) },
-            supportingContent = { Text(strings.stmt.page_log_supporting) },
+            headlineContent = { Text(stringResource(R.string.page_log_headline)) },
+            supportingContent = { Text(stringResource(R.string.page_log_supporting)) },
         )
 
         Spacer(Modifier.height(50.dp))

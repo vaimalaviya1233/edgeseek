@@ -25,14 +25,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.UniNavController
 import net.lsafer.edgeseek.app.UniRoute
 import net.lsafer.edgeseek.app.components.lib.ListDivider
 import net.lsafer.edgeseek.app.components.lib.ListHeader
 import net.lsafer.edgeseek.app.components.lib.ListSectionTitle
-import net.lsafer.edgeseek.app.l10n.strings
 
 @Composable
 context(local: Local, navCtrl: UniNavController)
@@ -61,42 +62,42 @@ fun MainPageContent(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState())
             .then(modifier),
     ) {
-        ListHeader(title = strings.branding.app_name)
+        ListHeader(title = stringResource(R.string.app_name))
 
-        ListSectionTitle(title = strings.label.application)
+        ListSectionTitle(title = stringResource(R.string.application))
         HomePage_ListItem_activation()
         HomePage_ListItem_ui_colors()
 
         ListDivider()
-        ListSectionTitle(title = strings.label.job)
+        ListSectionTitle(title = stringResource(R.string.job))
         ListItem(
             modifier = Modifier
                 .clickable { navCtrl.push(UniRoute.EdgeListPage) },
-            headlineContent = { Text(strings.stmt.page_edge_list_headline) },
-            supportingContent = { Text(strings.stmt.page_edge_list_supporting) },
+            headlineContent = { Text(stringResource(R.string.page_edge_list_headline)) },
+            supportingContent = { Text(stringResource(R.string.page_edge_list_supporting)) },
         )
         HomePage_ListItem_auto_boot()
         HomePage_ListItem_brightness_reset()
 
         ListDivider()
-        ListSectionTitle(title = strings.label.misc)
+        ListSectionTitle(title = stringResource(R.string.misc))
         ListItem(
             modifier = Modifier
                 .clickable { navCtrl.push(UniRoute.PermissionsPage) },
-            headlineContent = { Text(strings.stmt.page_permissions_headline) },
-            supportingContent = { Text(strings.stmt.page_permissions_supporting) },
+            headlineContent = { Text(stringResource(R.string.page_permissions_headline)) },
+            supportingContent = { Text(stringResource(R.string.page_permissions_supporting)) },
         )
         ListItem(
             modifier = Modifier
                 .clickable { navCtrl.push(UniRoute.PresetsPage) },
-            headlineContent = { Text(strings.stmt.page_presets_headline) },
-            supportingContent = { Text(strings.stmt.page_presets_supporting) },
+            headlineContent = { Text(stringResource(R.string.page_presets_headline)) },
+            supportingContent = { Text(stringResource(R.string.page_presets_supporting)) },
         )
         ListItem(
             modifier = Modifier
                 .clickable { navCtrl.push(UniRoute.AboutPage) },
-            headlineContent = { Text(strings.stmt.page_about_headline) },
-            supportingContent = { Text(strings.stmt.page_about_supporting) },
+            headlineContent = { Text(stringResource(R.string.page_about_headline)) },
+            supportingContent = { Text(stringResource(R.string.page_about_supporting)) },
         )
 
         Spacer(Modifier.height(50.dp))
