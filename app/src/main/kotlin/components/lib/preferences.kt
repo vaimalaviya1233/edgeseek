@@ -5,8 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +17,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import com.godaddy.android.colorpicker.toColorInt
+import net.lsafer.edgeseek.app.components.icons.VisibilityOffIcon
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -66,7 +65,7 @@ fun ColorPreferenceListItem(
                                 .toArgb()
                                 .toHexString()
                         }) {
-                            Icon(Icons.Default.VisibilityOff, "Fix transparency")
+                            Icon(VisibilityOffIcon, "Fix transparency")
                         }
 
                         OutlinedCard(

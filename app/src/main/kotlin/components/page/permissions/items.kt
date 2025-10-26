@@ -8,8 +8,6 @@ import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import net.lsafer.edgeseek.app.MainAccessibilityService
 import net.lsafer.edgeseek.app.R
+import net.lsafer.edgeseek.app.components.icons.SettingsIcon
 import net.lsafer.edgeseek.app.components.lib.SwitchPreferenceListItem
 import net.lsafer.edgeseek.app.util.observeAsState
 
@@ -48,7 +47,7 @@ fun PermissionsPage_ListItem_allow_restricted_permissions(modifier: Modifier = M
         headlineContent = { Text(stringResource(R.string.restricted_permissions_headline)) },
         trailingContent = {
             IconButton(handleOnClick) {
-                Icon(Icons.Default.Settings, stringResource(R.string.open_settings))
+                Icon(SettingsIcon, stringResource(R.string.open_settings))
             }
         },
         supportingContent = {
