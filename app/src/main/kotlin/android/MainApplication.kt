@@ -24,9 +24,10 @@ import net.lsafer.compose.simplenav.InMemorySimpleNavController
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
+import net.lsafer.edgeseek.app.scripts.initRepositories
+import net.lsafer.edgeseek.app.scripts.registerShutdownHook
 import net.lsafer.edgeseek.app.support.CustomDimmerFacade
 import net.lsafer.edgeseek.app.support.CustomToastFacade
-import net.lsafer.edgeseek.app.support.MainRepository
 import kotlin.random.Random
 import kotlin.time.Clock
 
@@ -52,10 +53,11 @@ class MainApplication : Application() {
         local.snackbar = SnackbarHostState()
         local.toast = CustomToastFacade(this)
         local.dimmer = CustomDimmerFacade(this)
-        local.repo = MainRepository(
-            file = filesDir.resolve("datastore.json"),
-            coroutineScope = local.ioScope,
-        )
+
+        context(local) {
+            registerShutdownHook()
+            initRepositories(filesDir.resolve("datastore.json"))
+        }
 
         val navCtrl = InMemorySimpleNavController<AppRoute>(
             entries = when {
@@ -69,9 +71,5 @@ class MainApplication : Application() {
 
         globalLocal = local
         globalNavCtrl = navCtrl
-
-        Runtime.getRuntime().addShutdownHook(Thread {
-            local.ioScope.cancel()
-        })
     }
 }

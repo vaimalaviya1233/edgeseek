@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.datetime.TimeZone
 import net.lsafer.edgeseek.app.support.CustomDimmerFacade
 import net.lsafer.edgeseek.app.support.CustomToastFacade
-import net.lsafer.edgeseek.app.support.MainRepository
+import net.lsafer.edgeseek.app.support.Repo
 import kotlin.random.Random
 import kotlin.time.Clock
 
@@ -19,5 +19,5 @@ class Local {
     lateinit var toast: CustomToastFacade
     lateinit var dimmer: CustomDimmerFacade
 
-    lateinit var repo: MainRepository
+    val repo = Repo()
 }
