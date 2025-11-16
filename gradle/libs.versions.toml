@@ -12,7 +12,7 @@ java = "22"
 extkt = "0.1.5"
 optionkt = "0.0.6"
 
-lsafer-compose-simplenav = "0.0.2-rc.2"
+lsafer-compose-simplenav = "0.0.5-rc.0"
 
 # ANDROID
 agp = "8.12.3"

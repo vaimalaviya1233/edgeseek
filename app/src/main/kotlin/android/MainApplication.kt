@@ -20,7 +20,7 @@ import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.*
 import kotlinx.datetime.TimeZone
-import net.lsafer.compose.simplenav.InMemorySimpleNavController
+import net.lsafer.compose.simplenav.InMemoryNavController
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
@@ -59,13 +59,10 @@ class MainApplication : Application() {
             initRepositories(filesDir.resolve("datastore.json"))
         }
 
-        val navCtrl = InMemorySimpleNavController<AppRoute>(
-            entries = when {
-                !local.repo.introduced ->
-                    listOf(AppRoute.IntroductionWizard())
-
-                else ->
-                    listOf(AppRoute.HomePage)
+        val navCtrl = InMemoryNavController(
+            default = when {
+                local.repo.introduced -> AppRoute.HomePage
+                else -> AppRoute.IntroWizard
             },
         )
 

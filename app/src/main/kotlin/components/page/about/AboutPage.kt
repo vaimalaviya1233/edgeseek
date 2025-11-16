@@ -58,9 +58,8 @@ fun AboutPageContent(modifier: Modifier = Modifier) {
     val ctx = LocalContext.current
 
     fun openIntroductionWizard() {
-        @Suppress("ControlFlowWithEmptyBody")
-        while (navCtrl.back());
-        navCtrl.push(AppRoute.IntroductionWizard())
+        navCtrl.goToFirst()
+        navCtrl.replace(AppRoute.IntroWizard)
     }
 
     fun openUrl(urlString: String) {

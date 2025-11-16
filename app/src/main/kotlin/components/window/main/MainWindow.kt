@@ -17,7 +17,7 @@ package net.lsafer.edgeseek.app.components.window.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import net.lsafer.compose.simplenav.SimpleNavHost
+import net.lsafer.compose.simplenav.NavHost
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
@@ -28,12 +28,12 @@ import net.lsafer.edgeseek.app.components.page.home.HomePage
 import net.lsafer.edgeseek.app.components.page.log.LogPage
 import net.lsafer.edgeseek.app.components.page.permissions.PermissionsPage
 import net.lsafer.edgeseek.app.components.page.presets.PresetsPage
-import net.lsafer.edgeseek.app.components.wizard.introduction.IntroductionWizard
+import net.lsafer.edgeseek.app.components.wizard.introduction.IntroWizard
 
 @Composable
 context(local: Local, navCtrl: AppNavController)
 fun MainWindow(modifier: Modifier = Modifier) {
-    SimpleNavHost(navCtrl) {
+    NavHost(navCtrl) {
         entry<AppRoute.HomePage> { HomePage(modifier) }
         entry<AppRoute.EdgeListPage> { EdgeListPage(modifier) }
         entry<AppRoute.EdgeEditPage> { EdgeEditPage(it.pos, modifier) }
@@ -41,8 +41,6 @@ fun MainWindow(modifier: Modifier = Modifier) {
         entry<AppRoute.PresetsPage> { PresetsPage(modifier) }
         entry<AppRoute.AboutPage> { AboutPage(modifier) }
         entry<AppRoute.LogPage> { LogPage(modifier) }
-        entry<AppRoute.IntroductionWizard> { route ->
-            IntroductionWizard(route, modifier)
-        }
+        entry<AppRoute.IntroWizard> { IntroWizard(modifier) }
     }
 }

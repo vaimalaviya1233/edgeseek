@@ -1,9 +1,9 @@
 package net.lsafer.edgeseek.app
 
-import net.lsafer.compose.simplenav.SimpleNavController
+import net.lsafer.compose.simplenav.NavController
 import net.lsafer.edgeseek.app.data.settings.EdgePos
 
-typealias AppNavController = SimpleNavController<AppRoute>
+typealias AppNavController = NavController<AppRoute>
 
 sealed interface AppRoute {
     data object HomePage : AppRoute
@@ -13,13 +13,5 @@ sealed interface AppRoute {
     data object PresetsPage : AppRoute
     data object AboutPage : AppRoute
     data object LogPage : AppRoute
-
-    data class IntroductionWizard(val step: Step = Step.Welcome) : AppRoute {
-        enum class Step {
-            Welcome,
-            Permissions,
-            Presets,
-            Done,
-        }
-    }
+    data object IntroWizard : AppRoute
 }
