@@ -12,7 +12,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(FlowPreview::class)
 context(local: Local)
-fun initRepositories(file: File) {
+fun initRepo(dataDir: File) {
+    val file = dataDir.resolve("datastore.json")
     local.repo.data += file.readJson()
     snapshotFlow { local.repo.data.toMap() }
         .debounce(1.seconds)

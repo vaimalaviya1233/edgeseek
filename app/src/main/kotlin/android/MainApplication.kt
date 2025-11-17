@@ -24,7 +24,7 @@ import net.lsafer.compose.simplenav.InMemoryNavController
 import net.lsafer.edgeseek.app.AppNavController
 import net.lsafer.edgeseek.app.AppRoute
 import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.scripts.initRepositories
+import net.lsafer.edgeseek.app.scripts.initRepo
 import net.lsafer.edgeseek.app.scripts.registerShutdownHook
 import net.lsafer.edgeseek.app.support.CustomDimmerFacade
 import net.lsafer.edgeseek.app.support.CustomToastFacade
@@ -56,7 +56,7 @@ class MainApplication : Application() {
 
         context(local) {
             registerShutdownHook()
-            initRepositories(filesDir.resolve("datastore.json"))
+            initRepo(dataDir = filesDir)
         }
 
         val navCtrl = InMemoryNavController(
