@@ -135,21 +135,23 @@ class MainService : Service() {
                     displayHeight = displayRealSize.y
                 }
 
-                for (pos in EdgePos.entries) {
-                    val facade = EdgeViewFacade(
-                        ctx = this@MainService,
-                        local = local,
-                        displayRotation = displayRotation,
-                        displayHeight = displayHeight,
-                        displayWidth = displayWidth,
-                        displayDensityDpi = displayDensityDpi,
-                    )
+                coroutineScope {
+                    for (pos in EdgePos.entries) launch {
+                        val facade = EdgeViewFacade(
+                            ctx = this@MainService,
+                            local = local,
+                            displayRotation = displayRotation,
+                            displayHeight = displayHeight,
+                            displayWidth = displayWidth,
+                            displayDensityDpi = displayDensityDpi,
+                        )
 
-                    snapshotFlow { local.repo.getEdgeData(pos) }
-                        .onEach { facade.update(it) }
-                        .onCompletion { facade.detach() }
-                        .flowOn(Dispatchers.Main)
-                        .launchIn(this)
+                        snapshotFlow { local.repo.getEdgeData(pos) }
+                            .onEach { facade.update(it) }
+                            .onCompletion { facade.detach() }
+                            .flowOn(Dispatchers.Main)
+                            .collect()
+                    }
                 }
             }
         }
