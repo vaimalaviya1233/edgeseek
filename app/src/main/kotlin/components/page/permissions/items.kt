@@ -17,8 +17,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import net.lsafer.edgeseek.app.android.MainAccessibilityService
 import net.lsafer.edgeseek.app.R
+import net.lsafer.edgeseek.app.android.MainAccessibilityService
 import net.lsafer.edgeseek.app.components.icons.SettingsIcon
 import net.lsafer.edgeseek.app.components.lib.SwitchPreferenceListItem
 
@@ -144,8 +144,7 @@ fun PermissionsPage_ListItem_ignore_battery_optimizations(modifier: Modifier = M
 fun PermissionsPage_ListItem_accessibility_service(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    val isChecked by MainAccessibilityService.aliveState.collectAsState(false)
-
+    val isChecked = MainAccessibilityService.aliveState
     val handleOnChange = { _: Boolean ->
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         // intent.data = Uri.parse("package:${context.packageName}")

@@ -22,6 +22,13 @@ import android.provider.Settings
 import android.util.Log
 import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 
+/**
+ * Broadcast receiver that handles screen-off events.
+ *
+ * When the screen is turned off, this receiver optionally resets the device
+ * brightness mode to automatic and clears the global dimmer overlay, based
+ * on the `brightnessReset` flag in the repository.
+ */
 class ScreenOffBroadCastReceiver : BroadcastReceiver() {
     companion object {
         private val TAG = ScreenOffBroadCastReceiver::class.simpleName!!

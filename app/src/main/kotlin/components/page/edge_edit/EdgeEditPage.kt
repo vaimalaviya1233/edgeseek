@@ -60,7 +60,7 @@ fun EdgeEditPageContent(
     pos: EdgePos,
     modifier: Modifier = Modifier,
 ) {
-    val data by remember { derivedStateOf { local.repo[pos] } }
+    val data by remember { derivedStateOf { local.repo.getEdgePosData(pos) } }
 
     fun edit(block: (EdgePosData) -> EdgePosData) {
         local.repo.edgePosList += block(data)

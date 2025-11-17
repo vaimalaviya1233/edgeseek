@@ -10,6 +10,10 @@ import org.cufy.json.*
 import java.io.File
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * Initializes the repo in by loading persisted
+ * data and setting up automatic saving of changes.
+ */
 @OptIn(FlowPreview::class)
 context(local: Local)
 fun initRepo(dataDir: File) {

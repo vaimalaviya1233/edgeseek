@@ -20,6 +20,13 @@ import android.content.Context
 import android.content.Intent
 import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 
+/**
+ * Broadcast receiver that listens for device boot completion.
+ *
+ * When the system finishes booting (`ACTION_BOOT_COMPLETED`), this receiver
+ * optionally starts the [MainService] if the `autoBoot` flag in the repository
+ * is enabled.
+ */
 class BootCompleteBroadcastReceiver : BroadcastReceiver() {
     private val local = globalLocal
 

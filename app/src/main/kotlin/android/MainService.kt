@@ -31,18 +31,30 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningReduce
+import kotlinx.coroutines.flow.*
 import net.lsafer.edgeseek.app.R
 import net.lsafer.edgeseek.app.android.MainApplication.Companion.globalLocal
 import net.lsafer.edgeseek.app.data.settings.EdgePos
-import net.lsafer.edgeseek.app.data.settings.EdgeSide
-import net.lsafer.edgeseek.app.impl.launchEdgeViewJob
+import net.lsafer.edgeseek.app.impl.EdgeViewFacade
 
+/**
+ * Persistent foreground service that manages edge overlays and background behavior.
+ *
+ * Responsibilities:
+ * - Starts itself in the foreground with a notification (for Android O+).
+ * - Observes app activation state and stops itself if deactivated.
+ * - Listens to configuration changes to update edge overlays.
+ * - Initializes and maintains `EdgeViewFacade` instances for all positions.
+ * - Registers a screen-off broadcast receiver to handle screen-off events.
+ *
+ * All overlay updates and repository reads are reactive via Compose `snapshotFlow`,
+ * ensuring UI-consistent state and automatic cleanup when flows complete.
+ */
 class MainService : Service() {
     companion object {
+        /**
+         * Starts the service appropriately depending on the Android version.
+         */
         fun start(ctx: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 ctx.startForegroundService(Intent(ctx, MainService::class.java))
@@ -52,14 +64,15 @@ class MainService : Service() {
     }
 
     private val local = globalLocal
-    private var launchedEdgeViewJobsSubJobFlow = MutableSharedFlow<Job>(1)
-
     private val coroutineScope = CoroutineScope(
         CoroutineName("MainServiceScope") + Dispatchers.Default + SupervisorJob() +
                 CoroutineExceptionHandler { _, e ->
                     Log.e("MainServiceScope", "Unhandled coroutine exception", e)
                 }
     )
+
+    /** Counts configuration modifications; used to trigger overlay updates. */
+    private val configModCount = MutableStateFlow(0)
 
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
@@ -68,17 +81,14 @@ class MainService : Service() {
         super.onCreate()
         startForeground()
 
-        coroutineScope.launch {
-            if (!local.repo.activated) {
-                stopSelf()
-                return@launch
-            }
-
-            launchReceiverJob()
-            launchEdgeViewJobsSubJobsCleanupSubJob()
-            launchEdgeViewJobsSubJob()
-            launchSelfStopSubJob()
+        if (!local.repo.activated) {
+            stopSelf()
+            return
         }
+
+        initScreenOffReceiver()
+        initEdgeViewFacadesJob()
+        initSelfStopJob()
     }
 
     override fun onDestroy() {
@@ -88,86 +98,89 @@ class MainService : Service() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        launchEdgeViewJobsSubJob()
+        configModCount.value++
     }
 
+    /**
+     * Launches a coroutine that observes configuration changes and maintains
+     * edge overlay views for each [EdgePos].
+     *
+     * Each facade is updated reactively via a snapshot flow from the repository.
+     * The facade is detached when the flow completes.
+     */
     @Suppress("DEPRECATION")
-    private fun launchEdgeViewJobsSubJob() = context(local) {
-        val windowManager = getSystemService<WindowManager>()!!
-        val display = windowManager.defaultDisplay
-        val displayRotation = display.rotation
-        val displayDensityDpi = resources.displayMetrics.densityDpi
-
-        var displayHeight: Int
-        var displayWidth: Int
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            displayWidth = windowManager.currentWindowMetrics.bounds.width()
-            displayWidth -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetLeft
-            displayWidth -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetRight
-            displayHeight = windowManager.currentWindowMetrics.bounds.height()
-            displayHeight -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetTop
-            displayHeight -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetBottom
-        } else {
-            val displayRealSize = Point()
-            @Suppress("DEPRECATION")
-            display.getRealSize(displayRealSize)
-            displayWidth = displayRealSize.x
-            displayHeight = displayRealSize.y
-        }
-
-        val subJob = Job(coroutineScope.coroutineContext.job)
-
+    private fun initEdgeViewFacadesJob() {
         coroutineScope.launch {
-            launchedEdgeViewJobsSubJobFlow.emit(subJob)
+            configModCount.collectLatest {
+                val windowManager = getSystemService<WindowManager>()!!
+                val display = windowManager.defaultDisplay
+                val displayRotation = display.rotation
+                val displayDensityDpi = resources.displayMetrics.densityDpi
 
-            launch(subJob) {
-                for (side in EdgeSide.entries) {
-                    val sideDataFlow = snapshotFlow { local.repo[side] }
+                var displayHeight: Int
+                var displayWidth: Int
 
-                    for (pos in EdgePos.entries.filter { it.side == side }) {
-                        val posDataFlow = snapshotFlow { local.repo[pos] }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    displayWidth = windowManager.currentWindowMetrics.bounds.width()
+                    displayWidth -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetLeft
+                    displayWidth -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetRight
+                    displayHeight = windowManager.currentWindowMetrics.bounds.height()
+                    displayHeight -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetTop
+                    displayHeight -= windowManager.currentWindowMetrics.windowInsets.systemWindowInsetBottom
+                } else {
+                    val displayRealSize = Point()
+                    @Suppress("DEPRECATION")
+                    display.getRealSize(displayRealSize)
+                    displayWidth = displayRealSize.x
+                    displayHeight = displayRealSize.y
+                }
 
-                        launchEdgeViewJob(
-                            windowManager = windowManager,
-                            displayRotation = displayRotation,
-                            displayHeight = displayHeight,
-                            displayWidth = displayWidth,
-                            displayDensityDpi = displayDensityDpi,
-                            sideDataFlow = sideDataFlow,
-                            posDataFlow = posDataFlow,
-                        )
-                    }
+                for (pos in EdgePos.entries) {
+                    val facade = EdgeViewFacade(
+                        ctx = this@MainService,
+                        local = local,
+                        displayRotation = displayRotation,
+                        displayHeight = displayHeight,
+                        displayWidth = displayWidth,
+                        displayDensityDpi = displayDensityDpi,
+                    )
+
+                    snapshotFlow { local.repo.getEdgeData(pos) }
+                        .onEach { facade.update(it) }
+                        .onCompletion { facade.detach() }
+                        .flowOn(Dispatchers.Main)
+                        .launchIn(this)
                 }
             }
         }
     }
 
-    private fun launchEdgeViewJobsSubJobsCleanupSubJob() {
-        launchedEdgeViewJobsSubJobFlow
-            .runningReduce { oldJob, newJob ->
-                oldJob.cancel()
-                newJob
-            }
-            .launchIn(coroutineScope)
-    }
-
-    private fun launchSelfStopSubJob() {
+    /**
+     * Observes the activation state in the repository.
+     * Stops the service automatically if deactivated.
+     */
+    private fun initSelfStopJob() {
         snapshotFlow { local.repo.activated }
             .onEach { if (!it) stopSelf() }
             .launchIn(coroutineScope)
     }
 
-    private fun launchReceiverJob() {
-        val screenOffReceiver = ScreenOffBroadCastReceiver()
-
-        registerReceiver(screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
-
+    /**
+     * Registers a broadcast receiver for ACTION_SCREEN_OFF events.
+     * The receiver is automatically unregistered when the service coroutine scope is canceled.
+     */
+    private fun initScreenOffReceiver() {
+        val receiver = ScreenOffBroadCastReceiver()
+        registerReceiver(receiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
         coroutineScope.coroutineContext.job.invokeOnCompletion {
-            unregisterReceiver(screenOffReceiver)
+            unregisterReceiver(receiver)
         }
     }
 
+    /**
+     * Starts the service in the foreground with a minimal notification (O+ only).
+     * Creates a notification channel if necessary.
+     */
     private fun startForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val title = getString(R.string.foreground_noti_title)

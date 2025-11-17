@@ -2,21 +2,24 @@ package net.lsafer.edgeseek.app.android
 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 class MainAccessibilityService : AccessibilityService() {
     companion object {
-        val aliveState = MutableStateFlow(false)
+        var aliveState by mutableStateOf(false)
+            private set
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        aliveState.value = true
+        aliveState = true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        aliveState.value = false
+        aliveState = false
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

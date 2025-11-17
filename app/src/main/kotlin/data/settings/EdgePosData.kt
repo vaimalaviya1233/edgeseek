@@ -1,6 +1,7 @@
 package net.lsafer.edgeseek.app.data.settings
 
 import android.graphics.Color
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +9,8 @@ data class EdgePosData(
     /**
      * The position of this edge.
      */
-    val pos: EdgePos,
+    @SerialName("pos")
+    val id: EdgePos,
     /**
      * True, if this edge is activated.
      */

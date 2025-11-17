@@ -9,6 +9,10 @@ import net.lsafer.edgeseek.app.support.Repo
 import kotlin.random.Random
 import kotlin.time.Clock
 
+/**
+ * Holds app-wide local dependencies and runtime utilities.
+ * All properties are intended to be initialized at startup.
+ */
 class Local {
     lateinit var clock: Clock
     lateinit var random: Random

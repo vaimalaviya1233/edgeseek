@@ -2,6 +2,7 @@ package net.lsafer.edgeseek.app.impl
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.UiThread
 import net.lsafer.edgeseek.app.Local
 import net.lsafer.edgeseek.app.data.settings.ActionFeature
 
@@ -17,6 +18,7 @@ sealed class ActionFeatureImpl {
         }
     }
 
+    @UiThread
     context(_: Context, _: Local)
     abstract fun execute()
 

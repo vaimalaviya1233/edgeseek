@@ -7,8 +7,15 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.UiThread
 import androidx.core.content.getSystemService
 
+/**
+ * Provides a fullscreen dimmer overlay using a system window.
+ *
+ * This facade manages adding, updating, and removing a transparent black view
+ * on top of all content, allowing the app to control screen dimming intensity.
+ */
 class CustomDimmerFacade(context: Context) {
     companion object {
         private val TAG = CustomDimmerFacade::class.simpleName!!
@@ -17,10 +24,13 @@ class CustomDimmerFacade(context: Context) {
     private val windowManager = context.getSystemService<WindowManager>()!!
     private val windowParams = WindowManager.LayoutParams()
 
+    /** The dimmer view that gets added/removed from the window. */
     private var view = View(context)
 
+    /** Whether the dimmer view is currently attached to the window. */
     private var attached = false
 
+    /** Current dimming value in the range 0–255. */
     var currentValue: Int = 0
         private set
 
@@ -51,6 +61,13 @@ class CustomDimmerFacade(context: Context) {
         windowParams.width = windowSize.x * 3
     }
 
+    /**
+     * Updates the dimmer intensity.
+     *
+     * @param value The opacity level from 0 (off) to 255 (fully opaque black).
+     * Attaches the dimmer if needed, updates it if already attached, or removes it when 0.
+     */
+    @UiThread
     fun update(value: Int) {
         require(value in 0..255) { "Bad alpha value: $value" }
 

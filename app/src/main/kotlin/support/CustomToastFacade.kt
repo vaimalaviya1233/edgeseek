@@ -25,6 +25,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.annotation.UiThread
 import androidx.cardview.widget.CardView
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +33,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Displays custom toast messages using a system overlay window.
+ *
+ * This facade manages adding and removing a small card-shaped message view,
+ * handling sequential updates and automatically dismissing older toasts.
+ */
 class CustomToastFacade(context: Context) {
     companion object {
         private val TAG = CustomToastFacade::class.simpleName!!
@@ -40,10 +47,14 @@ class CustomToastFacade(context: Context) {
     private val windowManager = context.getSystemService<WindowManager>()!!
     private val windowParams = WindowManager.LayoutParams()
 
+    /** The card container hosting the toast message view. */
     private var containerView = CardView(context)
+    /** Text view used to display the toast message. (child of [containerView]) */
     private var textView = TextView(context)
 
+    /** Monotonically increasing ID to determine the latest shown toast. */
     private var showId = 0
+    /** Whether the toast view is currently attached to the window. */
     private var attached = false
 
     init {
@@ -71,6 +82,16 @@ class CustomToastFacade(context: Context) {
         containerView.addView(textView)
     }
 
+    /**
+     * Shows or updates the toast message.
+     *
+     * If the toast isn't already visible, it is attached to the window.
+     * Each call resets the dismissal timer, ensuring only the latest
+     * message remains on screen for its duration.
+     *
+     * @param text The message to display.
+     */
+    @UiThread
     fun update(text: String) {
         CoroutineScope(Dispatchers.Main).launch {
             if (!attached) {

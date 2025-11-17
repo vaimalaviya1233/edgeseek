@@ -4,38 +4,38 @@ import net.lsafer.edgeseek.app.data.settings.*
 
 val PRESET_SIDE_STANDARD = listOf(
     EdgeSideData(
-        side = EdgeSide.Top,
+        id = EdgeSide.Top,
         nSegments = 1,
     ),
     EdgeSideData(
-        side = EdgeSide.Bottom,
+        id = EdgeSide.Bottom,
         nSegments = 1,
     ),
     EdgeSideData(
-        side = EdgeSide.Left,
+        id = EdgeSide.Left,
         nSegments = 1,
     ),
     EdgeSideData(
-        side = EdgeSide.Right,
+        id = EdgeSide.Right,
         nSegments = 1,
     ),
 )
 
 val PRESET_SIDE_CENTERED = listOf(
     EdgeSideData(
-        side = EdgeSide.Top,
+        id = EdgeSide.Top,
         nSegments = 1,
     ),
     EdgeSideData(
-        side = EdgeSide.Bottom,
+        id = EdgeSide.Bottom,
         nSegments = 1,
     ),
     EdgeSideData(
-        side = EdgeSide.Left,
+        id = EdgeSide.Left,
         nSegments = 3,
     ),
     EdgeSideData(
-        side = EdgeSide.Right,
+        id = EdgeSide.Right,
         nSegments = 3,
     ),
 )
@@ -43,13 +43,13 @@ val PRESET_SIDE_CENTERED = listOf(
 val PRESET_POS_STANDARD = listOf(
     // Left
     EdgePosData(
-        pos = EdgePos.LeftCenter,
+        id = EdgePos.LeftCenter,
         activated = true,
         onSeek = ControlFeature.Music
     ),
     // Right
     EdgePosData(
-        pos = EdgePos.RightCenter,
+        id = EdgePos.RightCenter,
         activated = true,
         onSeek = ControlFeature.Brightness
     ),
@@ -58,7 +58,7 @@ val PRESET_POS_STANDARD = listOf(
 val PRESET_POS_BRIGHTNESS_ONLY = listOf(
     // Right
     EdgePosData(
-        pos = EdgePos.RightCenter,
+        id = EdgePos.RightCenter,
         activated = true,
         onSeek = ControlFeature.Brightness
     ),
@@ -67,13 +67,13 @@ val PRESET_POS_BRIGHTNESS_ONLY = listOf(
 val PRESET_POS_DOUBLE_BRIGHTNESS = listOf(
     // Left
     EdgePosData(
-        pos = EdgePos.LeftCenter,
+        id = EdgePos.LeftCenter,
         activated = true,
         onSeek = ControlFeature.Brightness
     ),
     // Right
     EdgePosData(
-        pos = EdgePos.RightCenter,
+        id = EdgePos.RightCenter,
         activated = true,
         onSeek = ControlFeature.Brightness
     ),

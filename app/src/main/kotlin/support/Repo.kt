@@ -3,17 +3,23 @@ package net.lsafer.edgeseek.app.support
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
-import kotlinx.coroutines.FlowPreview
 import kotlinx.serialization.json.JsonElement
-import net.lsafer.edgeseek.app.data.settings.EdgePos
-import net.lsafer.edgeseek.app.data.settings.EdgePosData
-import net.lsafer.edgeseek.app.data.settings.EdgeSide
-import net.lsafer.edgeseek.app.data.settings.EdgeSideData
+import net.lsafer.edgeseek.app.data.settings.*
 import org.cufy.json.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-@OptIn(FlowPreview::class)
+/**
+ * In-memory key–value repository backed by a Compose `mutableStateMapOf`.
+ *
+ * All values update reactively through Compose Snapshot System.
+ *
+ * At application startup, the repository is hydrated from disk
+ * and then kept in sync automatically: whenever the internal `data` map changes,
+ * a snapshot of the map is written back to disk from a background I/O scope.
+ * This creates a simple persistent data store without needing SharedPreferences
+ * or DataStore, while still being fully reactive inside the Compose runtime.
+ */
 class Repo {
     companion object {
         private const val PK_FLAG_ACTIVATED = "f.activated"
@@ -26,6 +32,7 @@ class Repo {
         private const val PK_WIZ_INTRO = "wiz.intro"
     }
 
+    /** Internal reactive storage for all JSON-encoded values. */
     val data = mutableStateMapOf<String, JsonElement>()
 
     // ==========[ UI ]
@@ -41,6 +48,7 @@ class Repo {
 
     // ==========[ WIZ ]
 
+    /** Whether the user has completed the introductory wizard. */
     var introduced by property(
         get = { data[PK_WIZ_INTRO]?.asBooleanOrNull ?: false },
         set = { data[PK_WIZ_INTRO] = it },
@@ -48,21 +56,30 @@ class Repo {
 
     // ==========[ FUN ]
 
+    /** Whether the main feature is currently activated. */
     var activated by property(
         get = { data[PK_FLAG_ACTIVATED]?.asBooleanOrNull ?: false },
         set = { data[PK_FLAG_ACTIVATED] = it },
     )
 
+    /** Whether auto-boot is enabled. Defaults to `true` if unset. */
     var autoBoot by property(
         get = { data[PK_FLAG_AUTO_BOOT]?.asBooleanOrNull ?: true },
         set = { data[PK_FLAG_AUTO_BOOT] = it },
     )
 
+    /** Whether brightness should be reset on screen off. */
     var brightnessReset by property(
         get = { data[PK_FLAG_BRIGHTNESS_RESET]?.asBooleanOrNull ?: true },
         set = { data[PK_FLAG_BRIGHTNESS_RESET] = it },
     )
 
+    /**
+     * Fixed-size list of edge-position configs.
+     *
+     * The list always contains one entry per `EdgePos` enum, regardless of what is
+     * actually stored. Missing entries fall back to their default `EdgePosData`.
+     */
     var edgePosList by property(
         get = {
             EdgePos.entries.map {
@@ -73,11 +90,17 @@ class Repo {
         },
         set = {
             it.forEach {
-                data[it.pos.key] = it.serializeToJsonElement()
+                data[it.id.key] = it.serializeToJsonElement()
             }
         }
     )
 
+    /**
+     * Fixed-size list of edge-side configs.
+     *
+     * The list always contains one entry per `EdgeSide` enum, regardless of what is
+     * actually stored. Missing entries fall back to their default `EdgeSideData`.
+     */
     var edgeSideList by property(
         get = {
             EdgeSide.entries.map {
@@ -88,18 +111,42 @@ class Repo {
         },
         set = {
             it.forEach {
-                data[it.side.key] = it.serializeToJsonElement()
+                data[it.id.key] = it.serializeToJsonElement()
             }
         },
     )
 
-    operator fun get(side: EdgeSide) =
-        edgeSideList.find { it.side == side } ?: EdgeSideData(side)
+    /**
+     * Retrieves the stored configuration for a specific edge side,
+     * returning a default instance if none was saved.
+     *
+     * > This lookup is Snapshot-aware
+     */
+    fun getEdgeSideData(side: EdgeSide) =
+        edgeSideList.find { it.id == side } ?: EdgeSideData(side)
 
-    operator fun get(pos: EdgePos) =
-        edgePosList.find { it.pos == pos } ?: EdgePosData(pos)
+    /**
+     * Retrieves the stored configuration for a specific edge pos,
+     * returning a default instance if none was saved.
+     *
+     * > This lookup is Snapshot-aware
+     */
+    fun getEdgePosData(pos: EdgePos) =
+        edgePosList.find { it.id == pos } ?: EdgePosData(pos)
+
+    /**
+     * Retrieves the stored configuration for a specific edge,
+     * returning a default instance if none was saved.
+     *
+     * > This lookup is Snapshot-aware
+     */
+    fun getEdgeData(pos: EdgePos) = EdgeData(getEdgeSideData(pos.side), getEdgePosData(pos))
 }
 
+/**
+ * Creates a Compose-aware read/write property delegate that caches reads
+ * via `derivedStateOf`, ensuring reactive updates when the underlying value changes.
+ */
 private fun <T> property(get: () -> T, set: (T) -> Unit) =
     object : ReadWriteProperty<Any?, T> {
         private val _cache by derivedStateOf { get() }

@@ -71,7 +71,7 @@ fun IntroWizard(modifier: Modifier = Modifier) {
             WizardScaffold(
                 onCancel = { stepNavCtrl.back() },
                 onComplete = {
-                    if (ctx.isMandatoryPermissionsMet()) {
+                    if (!ctx.isMandatoryPermissionsMet()) {
                         coroutineScope.launch {
                             local.snackbar.showSnackbar(
                                 ctx.getString(R.string.mandatory_permissions_not_met)
