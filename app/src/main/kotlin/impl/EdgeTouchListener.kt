@@ -10,15 +10,15 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import net.lsafer.edgeseek.app.Local
-import net.lsafer.edgeseek.app.data.settings.EdgePosData
+import net.lsafer.edgeseek.app.data.settings.EdgeData
 import net.lsafer.edgeseek.app.data.settings.EdgeSide
 import kotlin.math.abs
 
 class EdgeTouchListener(
     private val ctx: Context,
     private val local: Local,
-    private val edgePosData: EdgePosData,
-    private val edgeSide: EdgeSide,
+    private val data: EdgeData,
+    private val targetSide: EdgeSide,
     private val dpi: Int,
 
     private val onLongClick: ActionFeatureImpl?,
@@ -68,11 +68,11 @@ class EdgeTouchListener(
         mIsDone = false
         mCurrentSeekRange = null
         mCurrentSeekOrigin = null
-        mCurrentOriginXOrY = when (edgeSide) {
+        mCurrentOriginXOrY = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> e.y
             EdgeSide.Top, EdgeSide.Bottom -> e.x
         }
-        mCurrentOriginYOrX = when (edgeSide) {
+        mCurrentOriginYOrX = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> e.x
             EdgeSide.Top, EdgeSide.Bottom -> e.y
         }
@@ -135,30 +135,33 @@ class EdgeTouchListener(
             }
         }
 
-        val deltaXOrY = when (edgeSide) {
+        var deltaXOrY = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> e1.y - e2.y
             EdgeSide.Top, EdgeSide.Bottom -> e1.x - e2.x
         }
+
+        if (data.pos.seekReverse)
+            deltaXOrY *= -1
 
         if (mCurrentSeekOrigin == null) {
             mCurrentSeekOrigin = onSeekImpl.fetchValue()
         }
 
         if (mCurrentSeekRange == null) {
-            mCurrentSeekRange = if (edgePosData.seekSteps)
+            mCurrentSeekRange = if (data.pos.seekSteps)
                 onSeekImpl.fetchStepRange(deltaXOrY.toInt())
             else
                 onSeekImpl.fetchRange()
         }
 
         val factor = xSeekSensitivityFactor / (mCurrentSeekRange!!.last - mCurrentSeekRange!!.first)
-        val accBoost = if (edgePosData.seekAcceleration) abs(deltaXOrY / factor) else 1f
-        val newValue = mCurrentSeekOrigin!! + ((deltaXOrY * accBoost) / factor * edgePosData.sensitivity).toInt()
+        val accBoost = if (data.pos.seekAcceleration) abs(deltaXOrY / factor) else 1f
+        val newValue = mCurrentSeekOrigin!! + ((deltaXOrY * accBoost) / factor * data.pos.sensitivity).toInt()
         val newValueCoerced = newValue.coerceIn(mCurrentSeekRange!!)
 
-        val value = onSeekImpl.updateValue(newValueCoerced, edgePosData.feedbackSystemPanel)
+        val value = onSeekImpl.updateValue(newValueCoerced, data.pos.feedbackSystemPanel)
 
-        if (edgePosData.feedbackToast) {
+        if (data.pos.feedbackToast) {
             local.toast.update("$value")
         }
 
@@ -209,24 +212,24 @@ class EdgeTouchListener(
     }
 
     private fun doFeedbackVibration() {
-        if (edgePosData.feedbackVibration > 0) {
+        if (data.pos.feedbackVibration > 0) {
             val vibrator = ctx.getSystemService(Vibrator::class.java)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 vibrator.vibrate(
                     VibrationEffect.createOneShot(
-                        edgePosData.feedbackVibration.toLong(),
+                        data.pos.feedbackVibration.toLong(),
                         VibrationEffect.DEFAULT_AMPLITUDE
                     )
                 )
             else
                 @Suppress("DEPRECATION")
-                vibrator.vibrate(edgePosData.feedbackVibration.toLong())
+                vibrator.vibrate(data.pos.feedbackVibration.toLong())
         }
     }
 
     private fun doFeedbackToast() = context(ctx, local) {
-        if (onSeekImpl != null && edgePosData.feedbackToast) {
+        if (onSeekImpl != null && data.pos.feedbackToast) {
             val value = onSeekImpl.fetchValue()
             local.toast.update("$value")
         }

@@ -152,6 +152,11 @@
         Limit seeking range around pivot points
     </string>
 
+    <string name="edge_seek_reverse_headline">Reverse Seek</string>
+    <string name="edge_seek_reverse_supporting">
+        Reverse the seek direction.
+    </string>
+
     <string name="edge_seek_acceleration_headline">Seek Acceleration</string>
     <string name="edge_seek_acceleration_supporting">
         Increase change rate when seeking more
