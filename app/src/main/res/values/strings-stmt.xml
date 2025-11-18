@@ -96,6 +96,11 @@
         Turn on auto brightness each time the device turn on to sleep
     </string>
 
+    <string name="app_rotate_edges_headline">Rotate Edges</string>
+    <string name="app_rotate_edges_supporting">
+        Rotate edges with the rotation of the display
+    </string>
+
     <!-- Edge -->
     <string name="edge_activation_headline">Activation</string>
     <string name="edge_activation_supporting">

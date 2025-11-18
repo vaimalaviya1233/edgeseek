@@ -95,6 +95,11 @@
         تفعيل السطوع التلقائي عند قفل الجهاز
     </string>
 
+    <string name="app_rotate_edges_headline">دوران الحواف</string>
+    <string name="app_rotate_edges_supporting">
+        إسمح للحواف بالدوران مع دوران الشاشة
+    </string>
+
     <!-- Edge -->
     <string name="edge_activation_headline">التفعيل</string>
     <string name="edge_activation_supporting">

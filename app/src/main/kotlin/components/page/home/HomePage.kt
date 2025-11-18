@@ -108,6 +108,13 @@ fun MainPageContent(modifier: Modifier = Modifier) {
             supporting = stringResource(R.string.app_brightness_reset_supporting),
             modifier = modifier,
         )
+        SwitchPreferenceListItem(
+            value = local.repo.rotateEdges,
+            onChange = { local.repo.rotateEdges = it },
+            headline = stringResource(R.string.app_rotate_edges_headline),
+            supporting = stringResource(R.string.app_rotate_edges_supporting),
+            modifier = modifier,
+        )
 
         ListDivider()
         ListSectionTitle(title = stringResource(R.string.misc))

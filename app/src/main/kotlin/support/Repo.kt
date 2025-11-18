@@ -25,6 +25,7 @@ class Repo {
         private const val PK_FLAG_ACTIVATED = "f.activated"
         private const val PK_FLAG_AUTO_BOOT = "f.auto_boot"
         private const val PK_FLAG_BRIGHTNESS_RESET = "f.brightness_reset"
+        private const val PK_FLAG_ROTATE_EDGES = "f.rotate_edges"
 
         private const val PK_UI_LANG = "ui.lang"
         private const val PK_UI_COLORS = "ui.colors"
@@ -72,6 +73,12 @@ class Repo {
     var brightnessReset by property(
         get = { data[PK_FLAG_BRIGHTNESS_RESET]?.asBooleanOrNull ?: true },
         set = { data[PK_FLAG_BRIGHTNESS_RESET] = it },
+    )
+
+    /** True, to rotate edges with the rotation of the display. */
+    var rotateEdges by property(
+        get = { data[PK_FLAG_ROTATE_EDGES]?.asBooleanOrNull ?: false },
+        set = { data[PK_FLAG_ROTATE_EDGES] = it },
     )
 
     /**

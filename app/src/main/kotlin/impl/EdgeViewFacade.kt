@@ -79,26 +79,32 @@ class EdgeViewFacade(
             return
         }
 
-        val sideRotated = data.pos.id.side.rotate(displayRotation)
-        val cornerRotated = data.pos.id.corner.rotate(displayRotation)
+        var targetSide = data.pos.id.side
+        var targetCorner = data.pos.id.corner
+
+        // edges are rotated with display rotation by default, this rotates them back.
+        if (!local.repo.rotateEdges) {
+            targetSide = targetSide.rotate(displayRotation)
+            targetCorner = targetCorner.rotate(displayRotation)
+        }
 
         val lengthPct = 1f / data.side.nSegments
-        val windowLength = when (sideRotated) {
+        val windowLength = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> displayHeight
             EdgeSide.Top, EdgeSide.Bottom -> displayWidth
         }
 
         val length = (lengthPct * windowLength).roundToInt()
 
-        windowParams.height = when (sideRotated) {
+        windowParams.height = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> length
             EdgeSide.Top, EdgeSide.Bottom -> data.pos.thickness
         }
-        windowParams.width = when (sideRotated) {
+        windowParams.width = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> data.pos.thickness
             EdgeSide.Top, EdgeSide.Bottom -> length
         }
-        windowParams.gravity = when (cornerRotated) {
+        windowParams.gravity = when (targetCorner) {
             EdgeCorner.BottomRight -> Gravity.BOTTOM or Gravity.RIGHT
             EdgeCorner.Bottom -> Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             EdgeCorner.BottomLeft -> Gravity.BOTTOM or Gravity.LEFT
@@ -118,7 +124,7 @@ class EdgeViewFacade(
                 ctx = ctx,
                 local = local,
                 edgePosData = data.pos,
-                edgeSide = sideRotated,
+                edgeSide = targetSide,
                 dpi = displayDensityDpi,
                 onSeekImpl = ControlFeatureImpl.from(data.pos.onSeek),
                 onLongClick = ActionFeatureImpl.from(data.pos.onLongClick),
