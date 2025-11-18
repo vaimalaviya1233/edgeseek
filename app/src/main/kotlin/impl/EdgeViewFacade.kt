@@ -123,8 +123,8 @@ class EdgeViewFacade(
             EdgeTouchListener(
                 ctx = ctx,
                 local = local,
-                edgePosData = data.pos,
-                edgeSide = targetSide,
+                data = data,
+                targetSide = targetSide,
                 dpi = displayDensityDpi,
                 onSeekImpl = ControlFeatureImpl.from(data.pos.onSeek),
                 onLongClick = ActionFeatureImpl.from(data.pos.onLongClick),
