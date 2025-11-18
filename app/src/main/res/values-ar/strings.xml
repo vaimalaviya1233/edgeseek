@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">السحب على الحافة</string>
+
+    <string name="accessibility_service_description">
+        يستخدم التطبيق خدمة إمكانية الوصول لإدراج التطبيقات في القائمة السوداء.
+
+        بالإضافة إلى ذلك، تتطلب بعض أجهزة Oppo/OnePlus هذا الإذن للتحكم في الصوت في الخلفية.
+    </string>
+</resources>

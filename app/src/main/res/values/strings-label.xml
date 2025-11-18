@@ -1,0 +1,24 @@
+<resources>
+    <string name="additional">Additional</string>
+    <string name="appearance">Appearance</string>
+    <string name="application">Application</string>
+    <string name="author">Author</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear_log">Clear Log</string>
+    <string name="confirm">Confirm</string>
+    <string name="credits">Credits</string>
+    <string name="dimensions">Dimensions</string>
+    <string name="input">Input</string>
+    <string name="job">Job</string>
+    <string name="links">Links</string>
+    <string name="mandatory">Mandatory</string>
+    <string name="misc">Misc</string>
+    <string name="next">Next</string>
+    <string name="presets">Presets</string>
+    <string name="utility">Utility</string>
+    <string name="version">Version</string>
+    <string name="version_code">Version Code</string>
+    <string name="version_name">Version Name</string>
+    <string name="yes">Yes</string>
+</resources>

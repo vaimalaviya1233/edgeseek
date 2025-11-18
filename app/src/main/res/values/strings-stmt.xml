@@ -1,0 +1,234 @@
+<resources>
+    <string name="exit_application_qm">
+        Exit the application?
+    </string>
+    <string name="welcome_phrase">Welcome</string>
+    <string name="all_setup_phrase">All Set Up!</string>
+    <string name="mandatory_permissions_not_met">
+        Mandatory Permissions are not met
+    </string>
+    <string name="watch_tutorial">Watch Tutorial</string>
+    <string name="open_settings">Open Settings</string>
+
+    <!-- Pages -->
+    <string name="page_edge_list_headline">Edges</string>
+    <string name="page_edge_list_supporting">Customize the edges</string>
+    <string name="page_edge_list_heading">Choose Edge</string>
+    <string name="page_edge_list_summary">Touch an edge to customize it</string>
+
+    <string name="page_edge_edit_heading">Edge Configuration</string>
+
+    <string name="page_permissions_headline">Permissions</string>
+    <string name="page_permissions_supporting">Manage application\'s permissions</string>
+    <string name="page_permissions_heading">Permissions</string>
+
+    <string name="page_presets_headline">Presets</string>
+    <string name="page_presets_supporting">Choose a set of configurations</string>
+    <string name="page_presets_heading">Presets</string>
+    <string name="page_presets_summary">Preset configurations</string>
+
+    <string name="page_about_headline">About</string>
+    <string name="page_about_supporting">Information about this application</string>
+    <string name="page_about_heading">About</string>
+
+    <string name="page_log_headline">Logs</string>
+    <string name="page_log_supporting">Open log file</string>
+    <string name="page_log_heading">Logs</string>
+
+    <!-- Permissions -->
+    <string name="restricted_permissions_headline">
+        Allow Restricted Permissions
+    </string>
+    <string name="restricted_permissions_supporting">
+        In Android 13 and later, applications installed outside Google Play need to be
+        allowed \'Restricted Permissions\' explicitly.
+    </string>
+
+    <string name="display_over_other_apps_headline">
+        Display Over Other Apps
+    </string>
+    <string name="display_over_other_apps_supporting">
+        Allow this application to draw views floating on your screen
+    </string>
+
+    <string name="write_system_settings_headline">
+        Write System Settings
+    </string>
+    <string name="write_system_settings_supporting">
+        Allow this application to edit settings such as brightness level and music volume
+    </string>
+
+    <string name="ignore_battery_optimizations_headline">
+        Ignore Battery Optimizations
+    </string>
+    <string name="ignore_battery_optimizations_supporting">
+        Make this application free from the system battery optimizations.
+    </string>
+
+    <string name="accessibility_service_headline">
+        Accessibility Service
+    </string>
+    <string name="accessibility_service_supporting">
+        Allows the app to enforce a per-application whitelist/blacklist.\n
+        Additionally, some Oppo/OnePlus devices require this permission for Controlling audio in the background.
+    </string>
+
+    <!-- App -->
+    <string name="app_activation_headline">Activation</string>
+    <string name="app_activation_supporting">
+        Toggle to activate or deactivate the application
+    </string>
+
+    <string name="app_colors_headline">Change Theme</string>
+    <string name="app_colors_value_system">System</string>
+    <string name="app_colors_value_black">Black</string>
+    <string name="app_colors_value_dark">Dark</string>
+    <string name="app_colors_value_light">Light</string>
+    <string name="app_colors_value_white">White</string>
+
+    <string name="app_auto_boot_headline">Auto Boot</string>
+    <string name="app_auto_boot_supporting">
+        Auto boot the service every time the device booted-up
+    </string>
+
+    <string name="app_brightness_reset_headline">Brightness Reset</string>
+    <string name="app_brightness_reset_supporting">
+        Turn on auto brightness each time the device turn on to sleep
+    </string>
+
+    <string name="app_rotate_edges_headline">Rotate Edges</string>
+    <string name="app_rotate_edges_supporting">
+        Rotate edges with the rotation of the display
+    </string>
+
+    <!-- Edge -->
+    <string name="edge_activation_headline">Activation</string>
+    <string name="edge_activation_supporting">
+        Toggle to activate or deactivate this edge
+    </string>
+
+    <string name="edge_seek_task_headline">Seek Task</string>
+    <string name="edge_long_click_task_headline">Long Click Task</string>
+    <string name="edge_double_click_task_headline">Double Click Task</string>
+    <string name="edge_swipe_up_task_headline">Swipe Up Task</string>
+    <string name="edge_swipe_down_task_headline">Swipe Down Task</string>
+    <string name="edge_swipe_left_task_headline">Swipe Left Task</string>
+    <string name="edge_swipe_right_task_headline">Swipe Right Task</string>
+
+    <string name="control_feature_nothing">Nothing</string>
+    <string name="control_feature_brightness">Control Brightness</string>
+    <string name="control_feature_brightness_dimmer">Control Brightness with Dimmer</string>
+    <string name="control_feature_alarm">Control Alarm</string>
+    <string name="control_feature_music">Control Music</string>
+    <string name="control_feature_ring">Control Ring</string>
+    <string name="control_feature_system">Control System</string>
+
+    <string name="action_feature_nothing">Nothing</string>
+    <string name="action_feature_expand_status_bar">Expand Status Bar</string>
+
+    <string name="edge_sensitivity_headline">Sensitivity</string>
+    <string name="edge_sensitivity_supporting">
+        How much you want the edge to be sensitive
+    </string>
+
+    <string name="edge_thickness_headline">Thickness</string>
+    <string name="edge_thickness_supporting">The thickness of the edge</string>
+
+    <string name="edge_color_headline">Color</string>
+    <string name="edge_color_supporting">The color of the edge.</string>
+
+    <string name="edge_feedback_toast_headline">Toast</string>
+    <string name="edge_feedback_toast_supporting">
+        Display a message with the current volume when seeking
+    </string>
+
+    <string name="edge_feedback_system_panel_headline">System Panel</string>
+    <string name="edge_feedback_system_panel_supporting">
+        Open system panel when controlling volume.
+    </string>
+
+    <string name="edge_seek_steps_headline">Step on pivot</string>
+    <string name="edge_seek_steps_supporting">
+        Limit seeking range around pivot points
+    </string>
+
+    <string name="edge_seek_acceleration_headline">Seek Acceleration</string>
+    <string name="edge_seek_acceleration_supporting">
+        Increase change rate when seeking more
+    </string>
+
+    <string name="edge_feedback_vibration_headline">Vibrate</string>
+    <string name="edge_feedback_vibration_supporting">
+        The strength of vibration when the edge is touched
+    </string>
+
+    <string name="edge_orientation_filter_headline">Orientation filter</string>
+    <string name="edge_orientation_filter_value_all">Portrait and Landscape</string>
+    <string name="edge_orientation_filter_value_portrait_only">Portrait Only</string>
+    <string name="edge_orientation_filter_value_landscape_only">Landscape Only</string>
+
+    <!-- About -->
+    <string name="about_website_headline">Website</string>
+    <string name="about_website_supporting">
+        The official EdgeSeek website
+    </string>
+
+    <string name="about_source_code_headline">Source Code</string>
+    <string name="about_source_code_supporting">
+        The application source code
+    </string>
+
+    <string name="about_reintroduce_headline">Re-Introduce</string>
+    <string name="about_reintroduce_supporting">
+        Run the introduction wizard
+    </string>
+
+    <!-- Presets -->
+    <string name="preset_standard_headline">Standard</string>
+    <string name="preset_standard_supporting">
+        Control music audio left and brightness right
+    </string>
+
+    <string name="preset_standard_c_headline">Standard (Centered)</string>
+    <string name="preset_standard_c_supporting">
+        Same as Standard but with centered bars
+    </string>
+
+    <string name="preset_brightness_headline">Brightness Only</string>
+    <string name="preset_brightness_supporting">
+        Only control brightness from the right
+    </string>
+
+    <string name="preset_brightness_c_headline">Brightness Only (Centered)</string>
+    <string name="preset_brightness_c_supporting">
+        Same as Brightness Only but with centered bars
+    </string>
+
+    <string name="preset_brightness_d_headline">Double Brightness</string>
+    <string name="preset_brightness_d_supporting">
+        Control brightness from both sides
+    </string>
+
+    <string name="preset_brightness_dc_headline">Double Brightness (Centered)</string>
+    <string name="preset_brightness_dc_supporting">
+        Same as Double Brightness but with centered bars (LSafer\'s choice)
+    </string>
+
+    <!-- Preset Util -->
+    <string name="show_all_headline">Show All</string>
+    <string name="show_all_supporting">
+        Increase the opacity of all edges
+    </string>
+
+    <string name="hide_all_headline">Hide All</string>
+    <string name="hide_all_supporting">
+        Decrease the opacity of all edges
+    </string>
+
+    <!-- Foreground Service -->
+    <string name="foreground_noti_title">Running In Background</string>
+    <string name="foreground_noti_text">
+        Allows the application to work in background.
+        Recommended disabling this notification since it has no real value.
+    </string>
+</resources>
