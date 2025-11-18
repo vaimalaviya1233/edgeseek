@@ -135,10 +135,13 @@ class EdgeTouchListener(
             }
         }
 
-        val deltaXOrY = when (targetSide) {
+        var deltaXOrY = when (targetSide) {
             EdgeSide.Left, EdgeSide.Right -> e1.y - e2.y
             EdgeSide.Top, EdgeSide.Bottom -> e1.x - e2.x
         }
+
+        if (data.pos.seekReverse)
+            deltaXOrY *= -1
 
         if (mCurrentSeekOrigin == null) {
             mCurrentSeekOrigin = onSeekImpl.fetchValue()

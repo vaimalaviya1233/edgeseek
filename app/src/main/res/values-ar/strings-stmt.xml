@@ -149,6 +149,11 @@
         توقف عن السحب عند الوصول إلى الصفر
     </string>
 
+    <string name="edge_seek_reverse_headline">عكس السحب</string>
+    <string name="edge_seek_reverse_supporting">
+        عكس إتجاه السحب
+    </string>
+
     <string name="edge_seek_acceleration_headline">التغير المتسارع</string>
     <string name="edge_seek_acceleration_supporting">
         زيادة تسارع التغيير عند الإستمرار بالسحب

@@ -50,6 +50,10 @@ data class EdgePosData(
      * Stop seek at pivot points requiring user to reengage gesture for going further.
      */
     val seekSteps: Boolean = true,
+    /**
+     * Reverse seek direction.
+     */
+    val seekReverse: Boolean = false,
     val seekAcceleration: Boolean = false,
     val orientationFilter: OrientationFilter = OrientationFilter.All,
 )
